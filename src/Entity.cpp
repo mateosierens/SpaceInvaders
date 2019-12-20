@@ -15,3 +15,9 @@ void Entity::setCoords(const std::pair<double, double> &coords) {
 Entity::Entity(const std::pair<double, double> &coords) : coords(coords) {}
 
 Entity::Entity() {}
+
+Entity::~Entity() {
+
+}
+
+

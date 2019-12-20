@@ -9,11 +9,17 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
+#include "View.h"
+
 class Game {
 private:
     std::shared_ptr<sf::RenderWindow> window;
+    std::vector<std::shared_ptr<View>> views;
+
 public:
     Game();
+
+    void runGame();
 
 };
 

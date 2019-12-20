@@ -7,21 +7,23 @@
 
 PlayerShip::PlayerShip(const double &x, const double &y)
 : Entity(std::make_pair(x,y)) {
-    std::shared_ptr<ObserverPattern::Observer> newObserver = std::make_shared<PlayerShipView>();
-    addObserver(newObserver);
-    notify(*this, "constructor");
+
 }
 
 void PlayerShip::moveLeft() {
-    std::pair<double, double> newCoords = getCoords();
-    newCoords.first -= 1;
-    setCoords(newCoords);
-    notify(*this, "moveLeft");
+    if (getCoords().first > -4) {
+        std::pair<double, double> newCoords = getCoords();
+        newCoords.first -= 0.1;
+        setCoords(newCoords);
+        notify(*this, "moveLeft");
+    }
 }
 
 void PlayerShip::moveRight() {
-    std::pair<double, double> newCoords = getCoords();
-    newCoords.first += 1;
-    setCoords(newCoords);
-    notify(*this, "moveRight");
+    if (getCoords().first < 4) {
+        std::pair<double, double> newCoords = getCoords();
+        newCoords.first += 0.1;
+        setCoords(newCoords);
+        notify(*this, "moveRight");
+    }
 }

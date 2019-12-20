@@ -5,3 +5,6 @@
 #include "View.h"
 #include "PlayerShip.h"
 
+View::View(std::shared_ptr<Entity> &entity) : entity(entity) {
+
+}

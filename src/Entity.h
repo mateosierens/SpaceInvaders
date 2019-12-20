@@ -6,13 +6,16 @@
 #define SPACEINVADERS_ENTITY_H
 
 #include <utility>
-#include "View.h"
 #include "Subject.h"
+
+class Game;
 
 class Entity : public ObserverPattern::Subject {
 private:
     std::pair<double, double> coords;
 public:
+    virtual ~Entity();
+
     Entity();
 
     Entity(const std::pair<double, double> &coords);
@@ -20,7 +23,6 @@ public:
     const std::pair<double, double> &getCoords() const;
 
     void setCoords(const std::pair<double, double> &coords);
-
 };
 
 
