@@ -21,6 +21,14 @@ public:
         return std::make_pair(window_x, window_y);
     }
 
+    double toGameCoordsX(double window_x) {
+        return (window_x/100)-4;
+    }
+
+    double toGameCoordsY(double window_y) {
+        return (window_y/(-100))+3;
+    }
+
 private:
     Transformation() {}
 };

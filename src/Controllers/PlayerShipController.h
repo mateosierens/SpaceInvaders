@@ -1,0 +1,27 @@
+//
+// Created by mateo on 09.12.19.
+//
+
+#ifndef SPACEINVADERS_PLAYERSHIPCONTROLLER_H
+#define SPACEINVADERS_PLAYERSHIPCONTROLLER_H
+
+
+#include "Controller.h"
+#include "BulletController.h"
+#include "../Entities/Entity.h"
+
+class PlayerShipController : public Controller {
+public:
+    PlayerShipController(const std::shared_ptr<Entity> &entity);
+
+    void move(const char &c);
+
+    bool shotBullet();
+
+    void setBullet(std::shared_ptr<BulletController> &bullet);
+
+    void update();
+};
+
+
+#endif //SPACEINVADERS_PLAYERSHIPCONTROLLER_H

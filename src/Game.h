@@ -9,16 +9,25 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-#include "View.h"
+#include "Views/View.h"
+#include "Controllers/Controller.h"
+#include "Controllers/PlayerShipController.h"
 
 class Game {
 private:
+    std::shared_ptr<PlayerShipController> player;
     std::shared_ptr<sf::RenderWindow> window;
     std::vector<std::shared_ptr<View>> views;
+    std::vector<std::shared_ptr<Controller>> controllers;
 
 public:
     Game();
 
+    // initializes all entities
+    // TODO: read from file
+    void startGame();
+
+    // runs the game, holds game loop
     void runGame();
 
 };
