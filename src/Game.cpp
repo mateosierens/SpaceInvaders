@@ -9,6 +9,7 @@
 #include "Views/BulletView.h"
 #include "Stopwatch.h"
 
+
 Game::Game() {
     window = std::make_shared<sf::RenderWindow>(sf::VideoMode(800, 600), "Space Invaders", sf::Style::Close);
 }
@@ -30,52 +31,58 @@ void Game::runGame() {
     //Create entities
     startGame();
 
+    sf::Music gameMusic;
+    gameMusic.openFromFile("megalovania.ogg");
+    gameMusic.play();
+
     //Game loop
     while (window->isOpen())
     {
         Stopwatch::instance().sleep(1);
+
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
         while (window->pollEvent(event))
         {
             // "close requested" event: we close the window
-            if (event.type == sf::Event::Closed)
-                window->close();
-            else if (event.type == sf::Event::KeyPressed) {
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-                {
-                    // left key is pressed: move our character with PlayerShipController
-                    player->move('Q');
+            if (event.type == sf::Event::Closed) window->close();
 
-                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-                {
-                    // right key is pressed: move our character with PlayerShipController
-                    player->move('D');
-                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-                {
-                    // space key is pressed: shoot a bullet from our character with PlayerShipController
-                    // if there is no bullet on the playfield yet
-                    if (!player->shotBullet()) {
-                        // we want to initialise bullet above the player location
-                        std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(player->getCoords().first,
-                                player->getCoords().second + player->getEntityHeight()/2);
+        }
 
-                        // make bullet view and make it observer of the bullet we created
-                        std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
-                        bulletView->makeThisObserver(bullet);
+        // check for keyboard input real-time
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+        {
+            // left key is pressed: move our character with PlayerShipController
+            player->move('Q');
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        {
+            // right key is pressed: move our character with PlayerShipController
+            player->move('D');
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        {
+            // space key is pressed: shoot a bullet from our character with PlayerShipController
+            // if there is no bullet on the playfield yet
+            if (!player->shotBullet()) {
+                // we want to initialise bullet above the player location
+                std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(player->getCoords().first,
+                                                                          player->getCoords().second + player->getEntityHeight()/2);
 
-                        // make a controller for the bullet we just created
-                        std::shared_ptr<Controller> bulletController = std::make_shared<BulletController>(bullet);
-                        views.push_back(bulletView);
-                        controllers.push_back(bulletController);
+                // make bullet view and make it observer of the bullet we created
+                std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
+                bulletView->makeThisObserver(bullet);
 
-                        // let playerShip have access to bulletController
-                        std::shared_ptr<BulletController> playerBulletController =
-                                std::dynamic_pointer_cast<BulletController>(bulletController);
-                        player->setBullet(playerBulletController);
-                        controllers.push_back(player);
-                    }
-                }
+                // make a controller for the bullet we just created
+                std::shared_ptr<Controller> bulletController = std::make_shared<BulletController>(bullet);
+                views.push_back(bulletView);
+                controllers.push_back(bulletController);
+
+                // let playerShip have access to bulletController
+                std::shared_ptr<BulletController> playerBulletController =
+                        std::dynamic_pointer_cast<BulletController>(bulletController);
+                player->setBullet(playerBulletController);
+                controllers.push_back(player);
             }
         }
 

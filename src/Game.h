@@ -7,11 +7,13 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <memory>
 
 #include "Views/View.h"
 #include "Controllers/Controller.h"
 #include "Controllers/PlayerShipController.h"
+
 
 class Game {
 private:
