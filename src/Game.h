@@ -13,14 +13,18 @@
 #include "Views/View.h"
 #include "Controllers/Controller.h"
 #include "Controllers/PlayerShipController.h"
+#include "Controllers/EnemyShipController.h"
 
 
 class Game {
 private:
+    sf::Sprite background;
+    sf::Texture bgTexture;
     std::shared_ptr<PlayerShipController> player;
     std::shared_ptr<sf::RenderWindow> window;
     std::vector<std::shared_ptr<View>> views;
     std::vector<std::shared_ptr<Controller>> controllers;
+    std::vector<std::shared_ptr<EnemyShipController>> enemyShips;
 
 public:
     Game();

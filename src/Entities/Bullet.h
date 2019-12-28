@@ -7,6 +7,7 @@
 
 
 #include "Entity.h"
+#include "EnemyShip.h"
 
 class Bullet : public Entity {
 public:
@@ -15,6 +16,8 @@ public:
     virtual ~Bullet();
 
     void update();
+
+    void removeBullet();
 };
 
 

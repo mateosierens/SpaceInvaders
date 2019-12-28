@@ -24,3 +24,9 @@ void BulletController::update() {
 bool BulletController::isBulletOutOfRange() const {
     return bulletOutOfRange;
 }
+
+void BulletController::hitEnemy() {
+    std::shared_ptr<Bullet> bullet = std::dynamic_pointer_cast<Bullet>(getEntity());
+    bullet->removeBullet();
+    bulletOutOfRange = true;
+}

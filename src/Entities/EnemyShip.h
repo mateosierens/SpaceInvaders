@@ -9,6 +9,24 @@
 #include "Entity.h"
 
 class EnemyShip : public Entity {
+private:
+    // enemies will first move left when they spawn, when they reach the border of the window
+    // they will start moving right by setting the bool to false
+    bool movingLeft = true;
+public:
+    EnemyShip(const double &x, const double &y);
+
+    void moveLeft();
+
+    void moveRight();
+
+    void moveDown();
+
+    void die();
+
+    bool isMovingLeft() const;
+
+    void setMovingLeft(bool movingLeft);
 
 };
 

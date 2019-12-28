@@ -6,8 +6,22 @@
 #define SPACEINVADERS_ENEMYSHIPCONTROLLER_H
 
 
-class EnemyShipController {
+#include "Controller.h"
+#include "BulletController.h"
 
+class EnemyShipController : public Controller {
+private:
+    std::shared_ptr<BulletController> playerBullet;
+public:
+    EnemyShipController(const std::shared_ptr<Entity> &entity);
+
+    ~EnemyShipController() override;
+
+    void update() override;
+
+    const std::shared_ptr<BulletController> &getPlayerBullet() const;
+
+    void setPlayerBullet(const std::shared_ptr<BulletController> &playerBullet);
 };
 
 

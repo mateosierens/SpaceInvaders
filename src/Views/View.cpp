@@ -39,3 +39,11 @@ const sf::Sprite &View::getSprite() const {
 void View::setSprite(const sf::Sprite &sprite) {
     View::sprite = sprite;
 }
+
+bool View::isDeleted() const {
+    return deleted;
+}
+
+void View::setDeleted(bool deleted) {
+    View::deleted = deleted;
+}

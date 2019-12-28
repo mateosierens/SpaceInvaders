@@ -22,5 +22,7 @@ void BulletView::onNotify(const Entity &entity, std::string event) {
                                                                                       entity.getCoords().second);
         bullet.setPosition(windowCoords.first, windowCoords.second);
         setSprite(bullet);
+    } else if (event == "remove") {
+        setDeleted(true);
     }
 }

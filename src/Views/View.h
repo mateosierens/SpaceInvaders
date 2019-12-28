@@ -12,6 +12,7 @@
 
 class View : public ObserverPattern::Observer {
 private:
+    bool deleted = false;
     std::shared_ptr<Entity> entity;
     sf::Sprite sprite;
     sf::Texture texture;
@@ -27,6 +28,10 @@ public:
     const sf::Sprite &getSprite() const;
 
     void setSprite(const sf::Sprite &sprite);
+
+    bool isDeleted() const;
+
+    void setDeleted(bool deleted);
 };
 
 

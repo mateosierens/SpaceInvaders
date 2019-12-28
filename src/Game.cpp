@@ -8,6 +8,9 @@
 #include "Controllers/PlayerShipController.h"
 #include "Views/BulletView.h"
 #include "Stopwatch.h"
+#include "Entities/EnemyShip.h"
+#include "Views/EnemyShipView.h"
+#include "Controllers/EnemyShipController.h"
 
 
 Game::Game() {
@@ -15,6 +18,9 @@ Game::Game() {
 }
 
 void Game::startGame() {
+    // create window background
+    bgTexture.loadFromFile("background.png");
+    background.setTexture(bgTexture);
 
     // create playership
     std::shared_ptr<Entity> ship = std::make_shared<PlayerShip>(0,-2);
@@ -22,8 +28,17 @@ void Game::startGame() {
     player = std::make_shared<PlayerShipController>(ship);
     shipView->makeThisObserver(ship);
     views.push_back(shipView);
+    controllers.push_back(player);
 
     // TODO: create other entities
+    // TEMPORARY: create an enemy to test enemy movements
+    std::shared_ptr<Entity> enemy = std::make_shared<EnemyShip>(0, 2);
+    std::shared_ptr<View> enemyView = std::make_shared<EnemyShipView>(enemy, "enemyShip.png");
+    enemyView->makeThisObserver(enemy);
+    views.push_back(enemyView);
+    std::shared_ptr<EnemyShipController> enemyController = std::make_shared<EnemyShipController>(enemy);
+    enemyShips.push_back(enemyController);
+    controllers.push_back(enemyController);
 }
 
 void Game::runGame() {
@@ -82,7 +97,12 @@ void Game::runGame() {
                 std::shared_ptr<BulletController> playerBulletController =
                         std::dynamic_pointer_cast<BulletController>(bulletController);
                 player->setBullet(playerBulletController);
-                controllers.push_back(player);
+                // playerShipController now uses update function so it needs to be in list of controllers
+
+
+                for (std::shared_ptr<EnemyShipController> enemy: enemyShips) {
+                    enemy->setPlayerBullet(playerBulletController);
+                }
             }
         }
 
@@ -102,9 +122,16 @@ void Game::runGame() {
         controllers = newControllers;
 
         // draw everything here...
+        window->draw(background);
+
+        std::vector<std::shared_ptr<View>> newViews;
         for (std::shared_ptr<View> view: views) {
-            window->draw(view->getSprite());
+            if (!view->isDeleted()) {
+                window->draw(view->getSprite());
+                newViews.push_back(view);
+            }
         }
+        views = newViews;
 
         // end the current frame
         window->display();

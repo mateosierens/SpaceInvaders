@@ -5,10 +5,7 @@
 #include "PlayerShip.h"
 #include "../Views/PlayerShipView.h"
 
-PlayerShip::PlayerShip(const double &x, const double &y)
-: Entity(std::make_pair(x,y)) {
-
-}
+PlayerShip::PlayerShip(const double &x, const double &y) : Entity(std::make_pair(x,y)) {}
 
 void PlayerShip::moveLeft() {
     // do check if left side of entity reaches the side of the window, if not do move
@@ -28,7 +25,6 @@ void PlayerShip::moveRight() {
         setCoords(newCoords);
         notify(*this, "moveRight");
     }
-
 }
 
 const std::shared_ptr<BulletController> &PlayerShip::getBullet() const {

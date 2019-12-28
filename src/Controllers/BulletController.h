@@ -21,6 +21,8 @@ public:
     BulletController(const std::shared_ptr<Entity> &entity);
 
     bool isBulletOutOfRange() const;
+
+    void hitEnemy();
 };
 
 

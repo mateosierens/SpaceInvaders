@@ -16,3 +16,7 @@ void Bullet::update() {
 Bullet::~Bullet() {
 
 }
+
+void Bullet::removeBullet() {
+    notify(*this, "remove");
+}
