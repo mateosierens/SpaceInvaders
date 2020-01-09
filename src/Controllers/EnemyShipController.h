@@ -22,6 +22,12 @@ public:
     const std::shared_ptr<BulletController> &getPlayerBullet() const;
 
     void setPlayerBullet(const std::shared_ptr<BulletController> &playerBullet);
+
+    bool movingLeft();
+
+    void setMovingLeft(bool direction);
+
+    void moveDown();
 };
 
 

@@ -115,3 +115,18 @@ const std::shared_ptr<BulletController> &EnemyShipController::getPlayerBullet() 
 void EnemyShipController::setPlayerBullet(const std::shared_ptr<BulletController> &playerBullet) {
     EnemyShipController::playerBullet = playerBullet;
 }
+
+bool EnemyShipController::movingLeft() {
+    std::shared_ptr<EnemyShip> enemy = std::dynamic_pointer_cast<EnemyShip>(getEntity());
+    return enemy->isMovingLeft();
+}
+
+void EnemyShipController::setMovingLeft(bool direction) {
+    std::shared_ptr<EnemyShip> enemy = std::dynamic_pointer_cast<EnemyShip>(getEntity());
+    enemy->setMovingLeft(direction);
+}
+
+void EnemyShipController::moveDown() {
+    std::shared_ptr<EnemyShip> enemy = std::dynamic_pointer_cast<EnemyShip>(getEntity());
+    enemy->moveDown();
+}

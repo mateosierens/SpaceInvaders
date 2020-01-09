@@ -2,6 +2,7 @@
 // Created by mateo on 05.12.19.
 //
 
+#include <fstream>
 #include "Game.h"
 #include "Entities/PlayerShip.h"
 #include "Views/PlayerShipView.h"
@@ -11,34 +12,55 @@
 #include "Entities/EnemyShip.h"
 #include "Views/EnemyShipView.h"
 #include "Controllers/EnemyShipController.h"
+#include "json.hpp"
 
 
 Game::Game() {
-    window = std::make_shared<sf::RenderWindow>(sf::VideoMode(800, 600), "Space Invaders", sf::Style::Close);
+    window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1200, 900), "Space Invaders", sf::Style::Close);
+    Transformation::instance().setWindow(window);
 }
 
 void Game::startGame() {
     // create window background
     bgTexture.loadFromFile("background.png");
     background.setTexture(bgTexture);
+    // scale bgTexture to correct window size
+    float bgScale_x = window->getSize().x/(float)bgTexture.getSize().x;
+    float bgScale_y = window->getSize().y/(float)bgTexture.getSize().y;
+    background.setScale(bgScale_x, bgScale_y);
+
+    // read from json file
+    std::ifstream file("Level0.json");
+    nlohmann::json j;
+    file >> j;
 
     // create playership
-    std::shared_ptr<Entity> ship = std::make_shared<PlayerShip>(0,-2);
+    std::string stringPlayerX = j["player"]["x"];
+    std::string stringPlayerY = j["player"]["y"];
+    double playerX = std::stod(stringPlayerX);
+    double playerY = std::stod(stringPlayerY);
+    std::shared_ptr<Entity> ship = std::make_shared<PlayerShip>(playerX, playerY);
     std::shared_ptr<View> shipView = std::make_shared<PlayerShipView>(ship, "playerShip.png");
     player = std::make_shared<PlayerShipController>(ship);
     shipView->makeThisObserver(ship);
     views.push_back(shipView);
     controllers.push_back(player);
 
-    // TODO: create other entities
-    // TEMPORARY: create an enemy to test enemy movements
-    std::shared_ptr<Entity> enemy = std::make_shared<EnemyShip>(0, 2);
-    std::shared_ptr<View> enemyView = std::make_shared<EnemyShipView>(enemy, "enemyShip.png");
-    enemyView->makeThisObserver(enemy);
-    views.push_back(enemyView);
-    std::shared_ptr<EnemyShipController> enemyController = std::make_shared<EnemyShipController>(enemy);
-    enemyShips.push_back(enemyController);
-    controllers.push_back(enemyController);
+    // create enemies
+    for (int i = 0; i < j["enemies"].size(); ++i) {
+        std::string strX = j["enemies"][i]["x"];
+        std::string strY = j["enemies"][i]["y"];
+        double enemyX = std::stod(strX);
+        double enemyY = std::stod(strY);
+        std::shared_ptr<Entity> enemy = std::make_shared<EnemyShip>(enemyX, enemyY);
+        std::shared_ptr<View> enemyView = std::make_shared<EnemyShipView>(enemy, "enemyShip.png");
+        enemyView->makeThisObserver(enemy);
+        views.push_back(enemyView);
+        std::shared_ptr<EnemyShipController> enemyController = std::make_shared<EnemyShipController>(enemy);
+        enemyShips.push_back(enemyController);
+    }
+
+
 }
 
 void Game::runGame() {
@@ -120,6 +142,69 @@ void Game::runGame() {
             }
         }
         controllers = newControllers;
+
+        // now update enemies seperately as we want all enemies to be moving in sync
+        std::vector<std::shared_ptr<EnemyShipController>> newEnemies;
+        bool noEnemies = enemyShips.empty();
+        if (!noEnemies && enemyShips[0]->getEntity() == nullptr) {
+            enemyShips.erase(enemyShips.begin());
+        }
+        noEnemies = enemyShips.empty();
+        if (!noEnemies && enemyShips[enemyShips.size()-1]->getEntity() == nullptr) {
+            enemyShips.pop_back();
+        }
+        noEnemies = enemyShips.empty();
+        // if we are moving left we check if the leftmost enemy changes direction on update
+        if (!noEnemies && enemyShips[0]->movingLeft()) {
+            enemyShips[0]->update();
+            newEnemies.push_back(enemyShips[0]);
+            // if direction changes, move all other enemies down and change direction in every enemy
+            if (enemyShips[0]->getEntity() != nullptr
+            && !enemyShips[0]->movingLeft()) {
+                for (int i = 1; i < enemyShips.size(); ++i) {
+                    if (enemyShips[i]->getEntity() != nullptr) {
+                        enemyShips[i]->moveDown();
+                        enemyShips[i]->setMovingLeft(false);
+                        newEnemies.push_back(enemyShips[i]);
+                    }
+                }
+            }
+            // if direction is the same, use update function for other ships
+            else {
+                for (int i = 1; i < enemyShips.size(); ++i) {
+                    if (enemyShips[i]->getEntity() != nullptr) {
+                        enemyShips[i]->update();
+                        newEnemies.push_back(enemyShips[i]);
+                    }
+                }
+            }
+        }
+        // if we are moving right we check if the rightmost enemy changes direction on update
+        else if (!noEnemies && !enemyShips[enemyShips.size()-1]->movingLeft()) {
+            enemyShips[enemyShips.size()-1]->update();
+            // if direction changes, move all other enemies down and change direction in every enemy
+            if (enemyShips[enemyShips.size()-1]->getEntity() != nullptr
+            && enemyShips[enemyShips.size()-1]->movingLeft()) {
+                for (int i = 0; i < enemyShips.size()-1; ++i) {
+                    if (enemyShips[i]->getEntity() != nullptr) {
+                        enemyShips[i]->moveDown();
+                        enemyShips[i]->setMovingLeft(true);
+                        newEnemies.push_back(enemyShips[i]);
+                    }
+                }
+            }
+            // if direction is the same, use update function for other ships
+            else {
+                for (int i = 0; i < enemyShips.size()-1; ++i) {
+                    if (enemyShips[i]->getEntity() != nullptr) {
+                        enemyShips[i]->update();
+                        newEnemies.push_back(enemyShips[i]);
+                    }
+                }
+            }
+            newEnemies.push_back(enemyShips[enemyShips.size()-1]);
+        }
+        enemyShips = newEnemies;
 
         // draw everything here...
         window->draw(background);
