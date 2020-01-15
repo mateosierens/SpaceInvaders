@@ -10,6 +10,8 @@
 #include "EnemyShip.h"
 
 class Bullet : public Entity {
+private:
+    bool enemy = false;
 public:
     Bullet(const double &x, const double &y);
 
@@ -18,6 +20,8 @@ public:
     void update();
 
     void removeBullet();
+
+    void setEnemy(bool enemy);
 };
 
 

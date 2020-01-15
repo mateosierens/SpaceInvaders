@@ -8,8 +8,6 @@
 #include <utility>
 #include "../Subject.h"
 
-class Game;
-
 class Entity : public ObserverPattern::Subject {
 private:
     std::pair<double, double> coords; // coordinates of entity in game logic
@@ -36,6 +34,8 @@ public:
     double getEntityHeight() const;
 
     void setEntityHeight(double entityHeight);
+
+    bool collision(std::shared_ptr<Entity> otherEntity);
 };
 
 

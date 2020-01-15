@@ -22,7 +22,9 @@ public:
 
     bool isBulletOutOfRange() const;
 
-    void hitEnemy();
+    void hitEnemyOrPlayer();
+
+    void makeEnemyBullet();
 };
 
 

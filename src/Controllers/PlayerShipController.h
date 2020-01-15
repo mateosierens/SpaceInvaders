@@ -20,7 +20,15 @@ public:
 
     void setBullet(std::shared_ptr<BulletController> &bullet);
 
+    void addEnemyBullet(const std::shared_ptr<BulletController> &enemyBullet);
+
     void update();
+
+    bool alive();
+
+    void kill();
+
+    int getLives();
 };
 
 

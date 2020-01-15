@@ -13,7 +13,8 @@ BulletController::~BulletController() {
 
 void BulletController::update() {
     std::shared_ptr<Bullet> bullet = std::dynamic_pointer_cast<Bullet>(getEntity());
-    if (bullet->getCoords().second - (bullet->getEntityHeight()/2) > 3) {
+    if (bullet->getCoords().second - (bullet->getEntityHeight()/2) > 3 or
+    bullet->getCoords().second + (bullet->getEntityHeight()/2) < -3) {
         setEntity(nullptr);
         bulletOutOfRange = true;
     } else {
@@ -25,8 +26,13 @@ bool BulletController::isBulletOutOfRange() const {
     return bulletOutOfRange;
 }
 
-void BulletController::hitEnemy() {
+void BulletController::hitEnemyOrPlayer() {
     std::shared_ptr<Bullet> bullet = std::dynamic_pointer_cast<Bullet>(getEntity());
     bullet->removeBullet();
     bulletOutOfRange = true;
+}
+
+void BulletController::makeEnemyBullet() {
+    std::shared_ptr<Bullet> bullet = std::dynamic_pointer_cast<Bullet>(getEntity());
+    bullet->setEnemy(true);
 }

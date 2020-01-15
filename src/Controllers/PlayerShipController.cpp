@@ -31,5 +31,39 @@ void PlayerShipController::update() {
     if (ship->getBullet() != nullptr && ship->getBullet()->isBulletOutOfRange()) {
         ship->setBullet(nullptr);
     }
+    for (int i = 0; i < ship->getEnemyBullets().size(); i++) {
+
+        // if enemyBullet moves out of scope of screen, we remove it from enemyBullets
+        if (ship->getEnemyBullets()[i]->getEntity() == nullptr)
+            ship->removeEnemyBullet(i);
+    }
+    for (std::shared_ptr<BulletController> enemyBullet: ship->getEnemyBullets()) {
+        if (ship->collision(enemyBullet->getEntity())) {
+            ship->decreaseLives();
+            enemyBullet->hitEnemyOrPlayer();
+            enemyBullet->setEntity(nullptr);
+        }
+    }
 }
+
+void PlayerShipController::addEnemyBullet(const std::shared_ptr<BulletController> &enemyBullet) {
+    std::shared_ptr<PlayerShip> ship = std::dynamic_pointer_cast<PlayerShip>(getEntity());
+    ship->addEnemyBullet(enemyBullet);
+}
+
+bool PlayerShipController::alive() {
+    std::shared_ptr<PlayerShip> ship = std::dynamic_pointer_cast<PlayerShip>(getEntity());
+    return ship->isAlive();
+}
+
+void PlayerShipController::kill() {
+    std::shared_ptr<PlayerShip> ship = std::dynamic_pointer_cast<PlayerShip>(getEntity());
+    ship->kill();
+}
+
+int PlayerShipController::getLives() {
+    std::shared_ptr<PlayerShip> ship = std::dynamic_pointer_cast<PlayerShip>(getEntity());
+    return ship->getLives();
+}
+
 

@@ -14,6 +14,19 @@
 #include "Controllers/EnemyShipController.h"
 #include "json.hpp"
 
+/*
+ * RANDOM INT GENERATOR BETWEEN TWO VALUES, SOURCE:
+ * https://stackoverflow.com/questions/11758809/what-is-the-optimal-algorithm-for-generating-an-unbiased-random-integer-within-a?answertab=votes#tab-top
+ */
+int randomInt (int min, int max){
+    int n = max - min + 1;
+    int remainder = RAND_MAX % n;
+    int x;
+    do{
+        x = rand();
+    } while (x >= RAND_MAX - remainder);
+    return min + x % n;
+}
 
 Game::Game() {
     window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1200, 900), "Space Invaders", sf::Style::Close);
@@ -21,30 +34,47 @@ Game::Game() {
 }
 
 void Game::startGame() {
-    // create window background
-    bgTexture.loadFromFile("background.png");
-    background.setTexture(bgTexture);
-    // scale bgTexture to correct window size
-    float bgScale_x = window->getSize().x/(float)bgTexture.getSize().x;
-    float bgScale_y = window->getSize().y/(float)bgTexture.getSize().y;
-    background.setScale(bgScale_x, bgScale_y);
-
     // read from json file
-    std::ifstream file("Level0.json");
+    std::string level = "Level" + std::to_string(currentLevel) + ".json";
+    std::ifstream file(level);
     nlohmann::json j;
     file >> j;
 
-    // create playership
-    std::string stringPlayerX = j["player"]["x"];
-    std::string stringPlayerY = j["player"]["y"];
-    double playerX = std::stod(stringPlayerX);
-    double playerY = std::stod(stringPlayerY);
-    std::shared_ptr<Entity> ship = std::make_shared<PlayerShip>(playerX, playerY);
-    std::shared_ptr<View> shipView = std::make_shared<PlayerShipView>(ship, "playerShip.png");
-    player = std::make_shared<PlayerShipController>(ship);
-    shipView->makeThisObserver(ship);
-    views.push_back(shipView);
-    controllers.push_back(player);
+    if (currentLevel == 0) {
+        // create window background
+        bgTexture.loadFromFile("background.png");
+        background.setTexture(bgTexture);
+        // scale bgTexture to correct window size
+        float bgScale_x = window->getSize().x/(float)bgTexture.getSize().x;
+        float bgScale_y = window->getSize().y/(float)bgTexture.getSize().y;
+        background.setScale(bgScale_x, bgScale_y);
+
+        // create window background
+        goTexture.loadFromFile("gameOver.png");
+        gameOver.setTexture(goTexture);
+        // scale bgTexture to correct window size
+        float goScale_x = window->getSize().x/(float)goTexture.getSize().x;
+        float goScale_y = window->getSize().y/(float)goTexture.getSize().y;
+        gameOver.setScale(goScale_x, goScale_y);
+
+        // create font
+        comicSans.loadFromFile("COMIC.TTF");
+
+        // create playership
+        std::string stringPlayerX = j["player"]["x"];
+        std::string stringPlayerY = j["player"]["y"];
+        double playerX = std::stod(stringPlayerX);
+        double playerY = std::stod(stringPlayerY);
+        std::shared_ptr<Entity> ship = std::make_shared<PlayerShip>(playerX, playerY);
+        std::shared_ptr<View> shipView = std::make_shared<PlayerShipView>(ship, "playerShip.png");
+        player = std::make_shared<PlayerShipController>(ship);
+        shipView->makeThisObserver(ship);
+        views.push_back(shipView);
+        controllers.push_back(player);
+
+        playerLives.setFont(comicSans);
+        playerLives.setCharacterSize(50);
+    }
 
     // create enemies
     for (int i = 0; i < j["enemies"].size(); ++i) {
@@ -59,8 +89,6 @@ void Game::startGame() {
         std::shared_ptr<EnemyShipController> enemyController = std::make_shared<EnemyShipController>(enemy);
         enemyShips.push_back(enemyController);
     }
-
-
 }
 
 void Game::runGame() {
@@ -70,156 +98,246 @@ void Game::runGame() {
 
     sf::Music gameMusic;
     gameMusic.openFromFile("megalovania.ogg");
+
+    sf::Music gameOverMusic;
+    gameOverMusic.openFromFile("gameOverSound.ogg");
+
     gameMusic.play();
+
+    int counter = 0;
+
+    bool gameOverBool = false;
+    bool gameWin = false;
 
     //Game loop
     while (window->isOpen())
     {
         Stopwatch::instance().sleep(1);
 
+        if (enemyShips.empty()) {
+            if (currentLevel < levelCount-1) {
+                currentLevel++;
+                startGame();
+            } else {
+                // TODO: create win screen
+                gameWin = true;
+            }
+        }
+
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
         while (window->pollEvent(event))
         {
             // "close requested" event: we close the window
-            if (event.type == sf::Event::Closed) window->close();
+            if (event.type == sf::Event::Closed
+            or sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window->close();
 
         }
 
-        // check for keyboard input real-time
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-        {
-            // left key is pressed: move our character with PlayerShipController
-            player->move('Q');
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            // right key is pressed: move our character with PlayerShipController
-            player->move('D');
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        {
-            // space key is pressed: shoot a bullet from our character with PlayerShipController
-            // if there is no bullet on the playfield yet
-            if (!player->shotBullet()) {
-                // we want to initialise bullet above the player location
-                std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(player->getCoords().first,
-                                                                          player->getCoords().second + player->getEntityHeight()/2);
+        if (!gameWin) {
+            // check for keyboard input real-time
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+            {
+                // left key is pressed: move our character with PlayerShipController
+                player->move('Q');
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+            {
+                // right key is pressed: move our character with PlayerShipController
+                player->move('D');
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                // space key is pressed: shoot a bullet from our character with PlayerShipController
+                // if there is no bullet on the playfield yet
+                if (!player->shotBullet()) {
+                    // we want to initialise bullet above the player location
+                    std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(player->getCoords().first,
+                                                                              player->getCoords().second + player->getEntityHeight()/2);
+
+                    // make bullet view and make it observer of the bullet we created
+                    std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
+                    bulletView->makeThisObserver(bullet);
+
+                    // make a controller for the bullet we just created
+                    std::shared_ptr<Controller> bulletController = std::make_shared<BulletController>(bullet);
+                    views.push_back(bulletView);
+                    controllers.push_back(bulletController);
+
+                    // let playerShip have access to bulletController
+                    std::shared_ptr<BulletController> playerBulletController =
+                            std::dynamic_pointer_cast<BulletController>(bulletController);
+                    player->setBullet(playerBulletController);
+                    // playerShipController now uses update function so it needs to be in list of controllers
+
+
+                    for (std::shared_ptr<EnemyShipController> enemy: enemyShips) {
+                        enemy->setPlayerBullet(playerBulletController);
+                    }
+                }
+            }
+
+            // clear the window with black color
+            window->clear(sf::Color::Black);
+
+            // let controllers update their entities (e.g. Bullets)
+            std::vector<std::shared_ptr<Controller>> newControllers;
+            for (std::shared_ptr<Controller> controller: controllers) {
+                // if bullet flies out of the window we want to delete it so we also want to delete the controller
+                // out of the vector of controllers
+                if (controller->getEntity() != nullptr) {
+                    controller->update();
+                    newControllers.push_back(controller);
+                }
+            }
+            controllers = newControllers;
+
+            // now update enemies seperately as we want all enemies to be moving in sync
+            std::vector<std::shared_ptr<EnemyShipController>> newEnemies;
+            bool noEnemies = enemyShips.empty();
+            if (!noEnemies && enemyShips[0]->getEntity() == nullptr) {
+                enemyShips.erase(enemyShips.begin());
+            }
+            noEnemies = enemyShips.empty();
+            if (!noEnemies && enemyShips[enemyShips.size()-1]->getEntity() == nullptr) {
+                enemyShips.pop_back();
+            }
+            noEnemies = enemyShips.empty();
+            // if we are moving left we check if the leftmost enemy changes direction on update
+            if (!noEnemies && enemyShips[0]->movingLeft()) {
+                enemyShips[0]->update();
+                newEnemies.push_back(enemyShips[0]);
+                // if direction changes, move all other enemies down and change direction in every enemy
+                if (enemyShips[0]->getEntity() != nullptr
+                    && !enemyShips[0]->movingLeft()) {
+                    for (int i = 1; i < enemyShips.size(); ++i) {
+                        if (enemyShips[i]->getEntity() != nullptr) {
+                            enemyShips[i]->moveDown();
+                            enemyShips[i]->setMovingLeft(false);
+                            newEnemies.push_back(enemyShips[i]);
+                        }
+                    }
+                }
+                    // if direction is the same, use update function for other ships
+                else {
+                    for (int i = 1; i < enemyShips.size(); ++i) {
+                        if (enemyShips[i]->getEntity() != nullptr) {
+                            enemyShips[i]->update();
+                            newEnemies.push_back(enemyShips[i]);
+                        }
+                    }
+                }
+            }
+                // if we are moving right we check if the rightmost enemy changes direction on update
+            else if (!noEnemies && !enemyShips[enemyShips.size()-1]->movingLeft()) {
+                enemyShips[enemyShips.size()-1]->update();
+                // if direction changes, move all other enemies down and change direction in every enemy
+                if (enemyShips[enemyShips.size()-1]->getEntity() != nullptr
+                    && enemyShips[enemyShips.size()-1]->movingLeft()) {
+                    for (int i = 0; i < enemyShips.size()-1; ++i) {
+                        if (enemyShips[i]->getEntity() != nullptr) {
+                            enemyShips[i]->moveDown();
+                            enemyShips[i]->setMovingLeft(true);
+                            newEnemies.push_back(enemyShips[i]);
+                        }
+                    }
+                }
+                    // if direction is the same, use update function for other ships
+                else {
+                    for (int i = 0; i < enemyShips.size()-1; ++i) {
+                        if (enemyShips[i]->getEntity() != nullptr) {
+                            enemyShips[i]->update();
+                            newEnemies.push_back(enemyShips[i]);
+                        }
+                    }
+                }
+                newEnemies.push_back(enemyShips[enemyShips.size()-1]);
+            }
+            enemyShips = newEnemies;
+
+            // we keep a counter for letting enemies shoot bullets
+            if (counter == enemyShootPeriod && !enemyShips.empty()) {
+
+                // filter out killed enemies
+                for (int i = 0; i < enemyShips.size(); ++i) {
+                    if (enemyShips[i]->getEntity() == nullptr) enemyShips.erase(enemyShips.begin() + i);
+                }
+
+                // select random enemy in vector
+                int toShoot = randomInt(0, enemyShips.size()-1);
+                std::shared_ptr<EnemyShipController> enemyShooter = enemyShips[toShoot];
+
+                // initialise enemy bullet, tell player there is a new enemyBullet on screen
+                // and add enemy bullet to controllers
+                // we want to initialise bullet beneath the enemy location
+                std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(enemyShooter->getCoords().first,
+                                                                          enemyShooter->getCoords().second - enemyShooter->getEntityHeight()/2);
 
                 // make bullet view and make it observer of the bullet we created
                 std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
                 bulletView->makeThisObserver(bullet);
 
                 // make a controller for the bullet we just created
-                std::shared_ptr<Controller> bulletController = std::make_shared<BulletController>(bullet);
+                std::shared_ptr<BulletController> bulletController = std::make_shared<BulletController>(bullet);
+                bulletController->makeEnemyBullet();
                 views.push_back(bulletView);
                 controllers.push_back(bulletController);
 
-                // let playerShip have access to bulletController
-                std::shared_ptr<BulletController> playerBulletController =
-                        std::dynamic_pointer_cast<BulletController>(bulletController);
-                player->setBullet(playerBulletController);
-                // playerShipController now uses update function so it needs to be in list of controllers
+                player->addEnemyBullet(bulletController);
 
+                counter = 0;
+            } else counter++;
 
-                for (std::shared_ptr<EnemyShipController> enemy: enemyShips) {
-                    enemy->setPlayerBullet(playerBulletController);
-                }
-            }
-        }
+            // after updating everyone check if player is still alive
+            if (player->alive()) {
 
-        // clear the window with black color
-        window->clear(sf::Color::Black);
+                // draw everything here...
+                window->draw(background);
 
-        // let controllers update their entities (e.g. Bullets)
-        std::vector<std::shared_ptr<Controller>> newControllers;
-        for (std::shared_ptr<Controller> controller: controllers) {
-            // if bullet flies out of the window we want to delete it so we also want to delete the controller
-            // out of the vector of controllers
-            if (controller->getEntity() != nullptr) {
-                controller->update();
-                newControllers.push_back(controller);
-            }
-        }
-        controllers = newControllers;
+                // check how many lives player has left
+                std::string livesLeft = "Lives: " + std::to_string(player->getLives());
+                playerLives.setString(livesLeft);
+                window->draw(playerLives);
 
-        // now update enemies seperately as we want all enemies to be moving in sync
-        std::vector<std::shared_ptr<EnemyShipController>> newEnemies;
-        bool noEnemies = enemyShips.empty();
-        if (!noEnemies && enemyShips[0]->getEntity() == nullptr) {
-            enemyShips.erase(enemyShips.begin());
-        }
-        noEnemies = enemyShips.empty();
-        if (!noEnemies && enemyShips[enemyShips.size()-1]->getEntity() == nullptr) {
-            enemyShips.pop_back();
-        }
-        noEnemies = enemyShips.empty();
-        // if we are moving left we check if the leftmost enemy changes direction on update
-        if (!noEnemies && enemyShips[0]->movingLeft()) {
-            enemyShips[0]->update();
-            newEnemies.push_back(enemyShips[0]);
-            // if direction changes, move all other enemies down and change direction in every enemy
-            if (enemyShips[0]->getEntity() != nullptr
-            && !enemyShips[0]->movingLeft()) {
-                for (int i = 1; i < enemyShips.size(); ++i) {
-                    if (enemyShips[i]->getEntity() != nullptr) {
-                        enemyShips[i]->moveDown();
-                        enemyShips[i]->setMovingLeft(false);
-                        newEnemies.push_back(enemyShips[i]);
+                std::vector<std::shared_ptr<View>> newViews;
+                for (std::shared_ptr<View> view: views) {
+                    if (!view->isDeleted()) {
+                        window->draw(view->getSprite());
+                        newViews.push_back(view);
                     }
                 }
-            }
-            // if direction is the same, use update function for other ships
-            else {
-                for (int i = 1; i < enemyShips.size(); ++i) {
-                    if (enemyShips[i]->getEntity() != nullptr) {
-                        enemyShips[i]->update();
-                        newEnemies.push_back(enemyShips[i]);
-                    }
-                }
-            }
-        }
-        // if we are moving right we check if the rightmost enemy changes direction on update
-        else if (!noEnemies && !enemyShips[enemyShips.size()-1]->movingLeft()) {
-            enemyShips[enemyShips.size()-1]->update();
-            // if direction changes, move all other enemies down and change direction in every enemy
-            if (enemyShips[enemyShips.size()-1]->getEntity() != nullptr
-            && enemyShips[enemyShips.size()-1]->movingLeft()) {
-                for (int i = 0; i < enemyShips.size()-1; ++i) {
-                    if (enemyShips[i]->getEntity() != nullptr) {
-                        enemyShips[i]->moveDown();
-                        enemyShips[i]->setMovingLeft(true);
-                        newEnemies.push_back(enemyShips[i]);
-                    }
-                }
-            }
-            // if direction is the same, use update function for other ships
-            else {
-                for (int i = 0; i < enemyShips.size()-1; ++i) {
-                    if (enemyShips[i]->getEntity() != nullptr) {
-                        enemyShips[i]->update();
-                        newEnemies.push_back(enemyShips[i]);
-                    }
-                }
-            }
-            newEnemies.push_back(enemyShips[enemyShips.size()-1]);
-        }
-        enemyShips = newEnemies;
+                views = newViews;
+            } else {
+                // stop game music
+                gameMusic.stop();
 
-        // draw everything here...
-        window->draw(background);
+                // go to sleep for some time for transition to game over screen
+                // Stopwatch::instance().sleep(500);
 
-        std::vector<std::shared_ptr<View>> newViews;
-        for (std::shared_ptr<View> view: views) {
-            if (!view->isDeleted()) {
-                window->draw(view->getSprite());
-                newViews.push_back(view);
+                // if this is the first instance of the loop that the game is over,
+                // start the game over music
+                if (!gameOverBool) gameOverMusic.play();
+                gameOverBool = true;
+
+                // changing transparency of game over window for fade in
+                if (transparency < 255) {
+                    transparency += 0.1;
+                    sf::Color gameOverColor = gameOver.getColor();
+                    gameOverColor.a = (int) transparency;
+                    gameOver.setColor(gameOverColor);
+                }
+
+                window->draw(gameOver);
             }
-        }
-        views = newViews;
 
-        // end the current frame
-        window->display();
+            // check if enemies collide with player, if so player dies
+            for (std::shared_ptr<EnemyShipController> enemyShip: enemyShips) {
+                if (enemyShip->getEntity() != nullptr && enemyShip->getEntity()->collision(player->getEntity()))
+                    player->kill();
+            }
+
+            // end the current frame
+            window->display();
+        }
     }
-
 }

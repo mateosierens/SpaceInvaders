@@ -27,7 +27,6 @@ public:
     bool isMovingLeft() const;
 
     void setMovingLeft(bool movingLeft);
-
 };
 
 

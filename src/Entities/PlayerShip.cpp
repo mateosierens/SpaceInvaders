@@ -34,3 +34,36 @@ const std::shared_ptr<BulletController> &PlayerShip::getBullet() const {
 void PlayerShip::setBullet(const std::shared_ptr<BulletController> &bullet) {
     PlayerShip::bullet = bullet;
 }
+
+void PlayerShip::addEnemyBullet(const std::shared_ptr<BulletController> &enemyBullet) {
+    enemyBullets.push_back(enemyBullet);
+}
+
+const std::vector<std::shared_ptr<BulletController>> &PlayerShip::getEnemyBullets() const {
+    return enemyBullets;
+}
+
+void PlayerShip::removeEnemyBullet(const int &index) {
+    enemyBullets.erase(enemyBullets.begin() + index);
+}
+
+int PlayerShip::getLives() const {
+    return lives;
+}
+
+void PlayerShip::decreaseLives() {
+    if (lives != 0) {
+        lives--;
+        if (lives == 0) {
+            alive = false;
+        }
+    }
+}
+
+bool PlayerShip::isAlive() const {
+    return alive;
+}
+
+void PlayerShip::kill() {
+    alive = false;
+}
