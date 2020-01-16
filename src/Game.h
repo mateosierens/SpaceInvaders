@@ -38,6 +38,8 @@ private:
     int currentLevel = 0;
     int levelCount = 2;
     int enemyShootPeriod = 600;
+    bool gameOverBool = false;
+    bool gameWin = false;
 
 public:
     Game();
