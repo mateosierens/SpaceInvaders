@@ -21,6 +21,11 @@ public:
         std::this_thread::sleep_for(timespan);
     }
 
+    std::chrono::system_clock::time_point previous;
+    std::chrono::system_clock::time_point current;
+    double elapsed;
+
+
 private:
     Stopwatch() {};
 };

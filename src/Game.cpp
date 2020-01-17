@@ -126,11 +126,23 @@ void Game::runGame() {
 
     int counter = 0;
 
+    Stopwatch::instance().previous = std::chrono::system_clock::now();
+    double lag = 0.0;
+
+    double MS_PER_UPDATE = 16; // value for 60 FPS
+
     //Game loop
     while (window->isOpen())
     {
-        Stopwatch::instance().sleep(1);
+        Stopwatch::instance().current = std::chrono::system_clock::now();
+        Stopwatch::instance().elapsed =
+                std::chrono::duration_cast<std::chrono::milliseconds>(Stopwatch::instance().current - Stopwatch::instance().previous).count();
+        Stopwatch::instance().previous = Stopwatch::instance().current;
+        lag += Stopwatch::instance().elapsed;
 
+        /*
+         * INPUT BLOCK
+         */
 
         // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
@@ -197,116 +209,138 @@ void Game::runGame() {
             }
         }
 
+        /*
+         * UPDATE BLOCK
+         */
+
+        while (lag >= MS_PER_UPDATE) {
+            // let controllers update their entities (e.g. Bullets)
+            std::vector<std::shared_ptr<Controller>> newControllers;
+            for (std::shared_ptr<Controller> controller: controllers) {
+                // if bullet flies out of the window we want to delete it so we also want to delete the controller
+                // out of the vector of controllers
+                if (controller->getEntity() != nullptr) {
+                    controller->update();
+                    newControllers.push_back(controller);
+                }
+            }
+            controllers = newControllers;
+
+            // now update enemies seperately as we want all enemies to be moving in sync
+            std::vector<std::shared_ptr<EnemyShipController>> newEnemies;
+            bool noEnemies = enemyShips.empty();
+            if (!noEnemies && enemyShips[0]->getEntity() == nullptr) {
+                enemyShips.erase(enemyShips.begin());
+            }
+            noEnemies = enemyShips.empty();
+            if (!noEnemies && enemyShips[enemyShips.size()-1]->getEntity() == nullptr) {
+                enemyShips.pop_back();
+            }
+            noEnemies = enemyShips.empty();
+
+            // find index of leftmost and rightmost enemy
+            int leftmost = 0;
+            int rightmost = enemyShips.size()-1;
+
+            for (int j = 0; j < enemyShips.size(); ++j) {
+                if (enemyShips[j]->getEntity() != nullptr &&
+                enemyShips[j]->getCoords().first < enemyShips[leftmost]->getCoords().first) leftmost = j;
+                if (enemyShips[j]->getEntity() != nullptr &&
+                enemyShips[j]->getCoords().first > enemyShips[rightmost]->getCoords().first) rightmost = j;
+            }
+
+            // if we are moving left we check if the leftmost enemy changes direction on update
+            if (!noEnemies && enemyShips[leftmost]->movingLeft()) {
+                enemyShips[leftmost]->update();
+                // if direction changes, move all other enemies down and change direction in every enemy
+                if (enemyShips[leftmost]->getEntity() != nullptr
+                    && !enemyShips[leftmost]->movingLeft()) {
+                    for (int i = 0; i < enemyShips.size(); ++i) {
+                        if (enemyShips[i]->getEntity() != nullptr && i != leftmost) {
+                            enemyShips[i]->moveDown();
+                            enemyShips[i]->setMovingLeft(false);
+                            newEnemies.push_back(enemyShips[i]);
+                        } else if (i == leftmost) newEnemies.push_back(enemyShips[leftmost]);
+                    }
+                }
+                    // if direction is the same, use update function for other ships
+                else {
+                    for (int i = 0; i < enemyShips.size(); ++i) {
+                        if (enemyShips[i]->getEntity() != nullptr && i != leftmost) {
+                            enemyShips[i]->update();
+                            newEnemies.push_back(enemyShips[i]);
+                        } else if (i == leftmost) newEnemies.push_back(enemyShips[leftmost]);
+                    }
+                }
+            }
+                // if we are moving right we check if the rightmost enemy changes direction on update
+            else if (!noEnemies && !enemyShips[rightmost]->movingLeft()) {
+                enemyShips[rightmost]->update();
+                // if direction changes, move all other enemies down and change direction in every enemy
+                if (enemyShips[rightmost]->getEntity() != nullptr
+                    && enemyShips[rightmost]->movingLeft()) {
+                    for (int i = 0; i < enemyShips.size(); ++i) {
+                        if (enemyShips[i]->getEntity() != nullptr && i != rightmost) {
+                            enemyShips[i]->moveDown();
+                            enemyShips[i]->setMovingLeft(true);
+                            newEnemies.push_back(enemyShips[i]);
+                        } else if (i == rightmost) newEnemies.push_back(enemyShips[rightmost]);
+                    }
+                }
+                    // if direction is the same, use update function for other ships
+                else {
+                    for (int i = 0; i < enemyShips.size(); ++i) {
+                        if (enemyShips[i]->getEntity() != nullptr && i != rightmost) {
+                            enemyShips[i]->update();
+                            newEnemies.push_back(enemyShips[i]);
+                        } else if (i == rightmost) newEnemies.push_back(enemyShips[rightmost]);
+                    }
+                }
+            }
+            enemyShips = newEnemies;
+
+            // we keep a counter for letting enemies shoot bullets
+            if (counter == enemyShootPeriod && !enemyShips.empty()) {
+
+                // filter out killed enemies
+                for (int i = 0; i < enemyShips.size(); ++i) {
+                    if (enemyShips[i]->getEntity() == nullptr) enemyShips.erase(enemyShips.begin() + i);
+                }
+
+                // select random enemy in vector
+                int toShoot = randomInt(0, enemyShips.size()-1);
+                std::shared_ptr<EnemyShipController> enemyShooter = enemyShips[toShoot];
+
+                // initialise enemy bullet, tell player there is a new enemyBullet on screen
+                // and add enemy bullet to controllers
+                // we want to initialise bullet beneath the enemy location
+                std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(enemyShooter->getCoords().first,
+                                                                          enemyShooter->getCoords().second - enemyShooter->getEntityHeight()/2);
+
+                // make bullet view and make it observer of the bullet we created
+                std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
+                bulletView->makeThisObserver(bullet);
+
+                // make a controller for the bullet we just created
+                std::shared_ptr<BulletController> bulletController = std::make_shared<BulletController>(bullet);
+                bulletController->makeEnemyBullet();
+                views.push_back(bulletView);
+                controllers.push_back(bulletController);
+
+                player->addEnemyBullet(bulletController);
+
+                counter = 0;
+            } else counter++;
+            lag -= MS_PER_UPDATE;
+        }
+
+
+        /*
+         * RENDER BLOCK
+         */
+
         // clear the window with black color
         window->clear(sf::Color::Black);
-
-        // let controllers update their entities (e.g. Bullets)
-        std::vector<std::shared_ptr<Controller>> newControllers;
-        for (std::shared_ptr<Controller> controller: controllers) {
-            // if bullet flies out of the window we want to delete it so we also want to delete the controller
-            // out of the vector of controllers
-            if (controller->getEntity() != nullptr) {
-                controller->update();
-                newControllers.push_back(controller);
-            }
-        }
-        controllers = newControllers;
-
-        // now update enemies seperately as we want all enemies to be moving in sync
-        std::vector<std::shared_ptr<EnemyShipController>> newEnemies;
-        bool noEnemies = enemyShips.empty();
-        if (!noEnemies && enemyShips[0]->getEntity() == nullptr) {
-            enemyShips.erase(enemyShips.begin());
-        }
-        noEnemies = enemyShips.empty();
-        if (!noEnemies && enemyShips[enemyShips.size()-1]->getEntity() == nullptr) {
-            enemyShips.pop_back();
-        }
-        noEnemies = enemyShips.empty();
-        // if we are moving left we check if the leftmost enemy changes direction on update
-        if (!noEnemies && enemyShips[0]->movingLeft()) {
-            enemyShips[0]->update();
-            newEnemies.push_back(enemyShips[0]);
-            // if direction changes, move all other enemies down and change direction in every enemy
-            if (enemyShips[0]->getEntity() != nullptr
-                && !enemyShips[0]->movingLeft()) {
-                for (int i = 1; i < enemyShips.size(); ++i) {
-                    if (enemyShips[i]->getEntity() != nullptr) {
-                        enemyShips[i]->moveDown();
-                        enemyShips[i]->setMovingLeft(false);
-                        newEnemies.push_back(enemyShips[i]);
-                    }
-                }
-            }
-                // if direction is the same, use update function for other ships
-            else {
-                for (int i = 1; i < enemyShips.size(); ++i) {
-                    if (enemyShips[i]->getEntity() != nullptr) {
-                        enemyShips[i]->update();
-                        newEnemies.push_back(enemyShips[i]);
-                    }
-                }
-            }
-        }
-            // if we are moving right we check if the rightmost enemy changes direction on update
-        else if (!noEnemies && !enemyShips[enemyShips.size()-1]->movingLeft()) {
-            enemyShips[enemyShips.size()-1]->update();
-            // if direction changes, move all other enemies down and change direction in every enemy
-            if (enemyShips[enemyShips.size()-1]->getEntity() != nullptr
-                && enemyShips[enemyShips.size()-1]->movingLeft()) {
-                for (int i = 0; i < enemyShips.size()-1; ++i) {
-                    if (enemyShips[i]->getEntity() != nullptr) {
-                        enemyShips[i]->moveDown();
-                        enemyShips[i]->setMovingLeft(true);
-                        newEnemies.push_back(enemyShips[i]);
-                    }
-                }
-            }
-                // if direction is the same, use update function for other ships
-            else {
-                for (int i = 0; i < enemyShips.size()-1; ++i) {
-                    if (enemyShips[i]->getEntity() != nullptr) {
-                        enemyShips[i]->update();
-                        newEnemies.push_back(enemyShips[i]);
-                    }
-                }
-            }
-            newEnemies.push_back(enemyShips[enemyShips.size()-1]);
-        }
-        enemyShips = newEnemies;
-
-        // we keep a counter for letting enemies shoot bullets
-        if (counter == enemyShootPeriod && !enemyShips.empty()) {
-
-            // filter out killed enemies
-            for (int i = 0; i < enemyShips.size(); ++i) {
-                if (enemyShips[i]->getEntity() == nullptr) enemyShips.erase(enemyShips.begin() + i);
-            }
-
-            // select random enemy in vector
-            int toShoot = randomInt(0, enemyShips.size()-1);
-            std::shared_ptr<EnemyShipController> enemyShooter = enemyShips[toShoot];
-
-            // initialise enemy bullet, tell player there is a new enemyBullet on screen
-            // and add enemy bullet to controllers
-            // we want to initialise bullet beneath the enemy location
-            std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(enemyShooter->getCoords().first,
-                                                                      enemyShooter->getCoords().second - enemyShooter->getEntityHeight()/2);
-
-            // make bullet view and make it observer of the bullet we created
-            std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
-            bulletView->makeThisObserver(bullet);
-
-            // make a controller for the bullet we just created
-            std::shared_ptr<BulletController> bulletController = std::make_shared<BulletController>(bullet);
-            bulletController->makeEnemyBullet();
-            views.push_back(bulletView);
-            controllers.push_back(bulletController);
-
-            player->addEnemyBullet(bulletController);
-
-            counter = 0;
-        } else counter++;
 
         // after updating everyone check if player is still alive
         if (player->alive() && !gameWin) {
