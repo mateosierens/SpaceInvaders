@@ -167,53 +167,53 @@ void Game::runGame() {
             }
         }
 
-        // check for keyboard input real-time
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-        {
-            // left key is pressed: move our character with PlayerShipController
-            player->move('Q');
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            // right key is pressed: move our character with PlayerShipController
-            player->move('D');
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        {
-            // space key is pressed: shoot a bullet from our character with PlayerShipController
-            // if there is no bullet on the playfield yet
-            if (!player->shotBullet()) {
-                // we want to initialise bullet above the player location
-                std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(player->getCoords().first,
-                                                                          player->getCoords().second + player->getEntityHeight()/2);
+        while (lag >= MS_PER_UPDATE) {
+            // check for keyboard input real-time
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+            {
+                // left key is pressed: move our character with PlayerShipController
+                player->move('Q');
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+            {
+                // right key is pressed: move our character with PlayerShipController
+                player->move('D');
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            {
+                // space key is pressed: shoot a bullet from our character with PlayerShipController
+                // if there is no bullet on the playfield yet
+                if (!player->shotBullet()) {
+                    // we want to initialise bullet above the player location
+                    std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(player->getCoords().first,
+                                                                              player->getCoords().second + player->getEntityHeight()/2);
 
-                // make bullet view and make it observer of the bullet we created
-                std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
-                bulletView->makeThisObserver(bullet);
+                    // make bullet view and make it observer of the bullet we created
+                    std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
+                    bulletView->makeThisObserver(bullet);
 
-                // make a controller for the bullet we just created
-                std::shared_ptr<Controller> bulletController = std::make_shared<BulletController>(bullet);
-                views.push_back(bulletView);
-                controllers.push_back(bulletController);
+                    // make a controller for the bullet we just created
+                    std::shared_ptr<Controller> bulletController = std::make_shared<BulletController>(bullet);
+                    views.push_back(bulletView);
+                    controllers.push_back(bulletController);
 
-                // let playerShip have access to bulletController
-                std::shared_ptr<BulletController> playerBulletController =
-                        std::dynamic_pointer_cast<BulletController>(bulletController);
-                player->setBullet(playerBulletController);
-                // playerShipController now uses update function so it needs to be in list of controllers
+                    // let playerShip have access to bulletController
+                    std::shared_ptr<BulletController> playerBulletController =
+                            std::dynamic_pointer_cast<BulletController>(bulletController);
+                    player->setBullet(playerBulletController);
+                    // playerShipController now uses update function so it needs to be in list of controllers
 
 
-                for (std::shared_ptr<EnemyShipController> enemy: enemyShips) {
-                    enemy->setPlayerBullet(playerBulletController);
+                    for (std::shared_ptr<EnemyShipController> enemy: enemyShips) {
+                        enemy->setPlayerBullet(playerBulletController);
+                    }
                 }
             }
-        }
 
-        /*
-         * UPDATE BLOCK
-         */
+            /*
+            * UPDATE BLOCK
+            */
 
-        while (lag >= MS_PER_UPDATE) {
             // let controllers update their entities (e.g. Bullets)
             std::vector<std::shared_ptr<Controller>> newControllers;
             for (std::shared_ptr<Controller> controller: controllers) {
@@ -364,9 +364,6 @@ void Game::runGame() {
         } else if (!player->alive() && !gameWin) {
             // stop game music
             gameMusic.stop();
-
-            // go to sleep for some time for transition to game over screen
-            //Stopwatch::instance().sleep(500);
 
             // if this is the first instance of the loop that the game is over,
             // start the game over music

@@ -11,7 +11,7 @@ void PlayerShip::moveLeft() {
     // do check if left side of entity reaches the side of the window, if not do move
     if (getCoords().first - (getEntityWidth()/2) > -4) {
         std::pair<double, double> newCoords = getCoords();
-        newCoords.first -= 0.005;
+        newCoords.first -= 0.04;
         setCoords(newCoords);
         notify(*this, "moveLeft");
     }
@@ -21,7 +21,7 @@ void PlayerShip::moveRight() {
     // do check if right side of entity reaches the side of the window, if not do move
     if (getCoords().first + (getEntityWidth()/2) < 4) {
         std::pair<double, double> newCoords = getCoords();
-        newCoords.first += 0.005;
+        newCoords.first += 0.04;
         setCoords(newCoords);
         notify(*this, "moveRight");
     }
