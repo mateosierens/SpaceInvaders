@@ -167,6 +167,7 @@ void Game::runGame() {
             }
         }
 
+
         while (lag >= MS_PER_UPDATE) {
             // check for keyboard input real-time
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
@@ -331,6 +332,19 @@ void Game::runGame() {
 
                 counter = 0;
             } else counter++;
+
+            // if the game is game over we want to handle the fade in transparency in this loop as well,
+            // so the fade in happens at the same speed on every pc
+            if (!player->alive() && !gameWin) {
+                // changing transparency of game over window for fade in
+                if (transparency < 255) {
+                    transparency += 1;
+                    sf::Color gameOverColor = gameOver.getColor();
+                    gameOverColor.a = (int) transparency;
+                    gameOver.setColor(gameOverColor);
+                }
+            }
+
             lag -= MS_PER_UPDATE;
         }
 
@@ -369,14 +383,6 @@ void Game::runGame() {
             // start the game over music
             if (!gameOverBool) gameOverMusic.play();
             gameOverBool = true;
-
-            // changing transparency of game over window for fade in
-            if (transparency < 255) {
-                transparency += 0.1;
-                sf::Color gameOverColor = gameOver.getColor();
-                gameOverColor.a = (int) transparency;
-                gameOver.setColor(gameOverColor);
-            }
 
             window->draw(gameOver);
         } else if (player->alive() && gameWin) {
