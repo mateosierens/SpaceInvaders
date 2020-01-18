@@ -38,7 +38,8 @@ private:
 
     // game logic
     int currentLevel = 0;
-    int levelCount = 2;
+    int levelCount = 3;
+    int counter; // counter for enemy shoot period
     int enemyShootPeriod;
     bool gameOverBool = false;
     bool gameWin = false;

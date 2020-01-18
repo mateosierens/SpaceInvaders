@@ -121,6 +121,7 @@ void Game::startGame() {
     // set time between two enemies shooting
     std::string shootPeriod = j["enemyShootPeriod"];
     enemyShootPeriod = std::stoi(shootPeriod);
+    counter = 0;
 
     // create enemies
     for (int i = 0; i < j["enemies"].size(); ++i) {
@@ -193,8 +194,6 @@ void Game::runGame() {
     }
 
     gameMusic.play();
-
-    int counter = 0;
 
     Stopwatch::instance().previous = std::chrono::system_clock::now();
     double lag = 0.0;
