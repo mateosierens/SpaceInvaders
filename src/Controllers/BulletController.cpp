@@ -7,9 +7,7 @@
 namespace Controllers {
     BulletController::BulletController(const std::shared_ptr<Entities::Entity> &entity) : Controller(entity) {}
 
-    BulletController::~BulletController() {
-
-    }
+    BulletController::~BulletController() = default;
 
     void BulletController::update() {
         std::shared_ptr<Entities::Bullet> bullet = std::dynamic_pointer_cast<Entities::Bullet>(getEntity());

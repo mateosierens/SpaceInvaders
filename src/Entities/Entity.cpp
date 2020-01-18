@@ -5,48 +5,48 @@
 #include "Entity.h"
 
 namespace Entities {
-    const std::pair<double, double> &Entity::getCoords() const {
+    const std::pair<float, float> &Entity::getCoords() const {
         return coords;
     }
 
-    void Entity::setCoords(const std::pair<double, double> &coords) {
+    void Entity::setCoords(const std::pair<float, float> &coords) {
         Entity::coords = coords;
     }
 
-    Entity::Entity(const std::pair<double, double> &coords) : coords(coords) {}
+    Entity::Entity(const std::pair<float, float> &coords) : coords(coords) {}
 
-    Entity::Entity() {}
+    Entity::Entity() = default;
 
-    Entity::~Entity() {}
+    Entity::~Entity() = default;
 
-    double Entity::getEntityWidth() const {
+    float Entity::getEntityWidth() const {
         return entityWidth;
     }
 
-    void Entity::setEntityWidth(double entityWidth) {
+    void Entity::setEntityWidth(float entityWidth) {
         Entity::entityWidth = entityWidth;
     }
 
-    double Entity::getEntityHeight() const {
+    float Entity::getEntityHeight() const {
         return entityHeight;
     }
 
-    void Entity::setEntityHeight(double entityHeight) {
+    void Entity::setEntityHeight(float entityHeight) {
         Entity::entityHeight = entityHeight;
     }
 
     bool Entity::collision(std::shared_ptr<Entity> otherEntity) {
         // compute bullet bounds
-        double bulletLeft = otherEntity->getCoords().first - otherEntity->getEntityWidth()/2;
-        double bulletRight = otherEntity->getCoords().first + otherEntity->getEntityWidth()/2;
-        double bulletBottom = otherEntity->getCoords().second - otherEntity->getEntityHeight()/2;
-        double bulletTop = otherEntity->getCoords().second + otherEntity->getEntityHeight()/2;
+        float bulletLeft = otherEntity->getCoords().first - otherEntity->getEntityWidth()/2;
+        float bulletRight = otherEntity->getCoords().first + otherEntity->getEntityWidth()/2;
+        float bulletBottom = otherEntity->getCoords().second - otherEntity->getEntityHeight()/2;
+        float bulletTop = otherEntity->getCoords().second + otherEntity->getEntityHeight()/2;
 
         // compute enemy bounds
-        double entityLeft = this->coords.first - this->entityWidth/2;
-        double entityRight = this->coords.first + this->entityWidth/2;
-        double entityBottom = this->coords.second - this->entityHeight/2;
-        double entityTop = this->coords.second + this->entityHeight/2;
+        float entityLeft = this->coords.first - this->entityWidth/2;
+        float entityRight = this->coords.first + this->entityWidth/2;
+        float entityBottom = this->coords.second - this->entityHeight/2;
+        float entityTop = this->coords.second + this->entityHeight/2;
 
         // now check if any of the 4 corners of bullet is colliding with the enemy
 

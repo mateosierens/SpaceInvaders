@@ -18,7 +18,7 @@ namespace Entities {
         int lives = 3;
         bool alive = true;
     public:
-        PlayerShip(const double &x, const double &y);
+        PlayerShip(const float &x, const float &y);
 
         void moveLeft();
 

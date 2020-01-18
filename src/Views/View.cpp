@@ -12,8 +12,8 @@ namespace Views {
         try {
             // first load texture of playerSprite from file
             if (!texture.loadFromFile(textureFile)) {
-                throw std::runtime_error("Couldn't find file " + textureFile + ", please include this file in the game"
-                                                                              "directory and try again");
+                throw std::runtime_error("Couldn't find file " + textureFile + ", please include this file in the resources"
+                                                                              "folder and try again");
             }
 
         } catch (std::exception &e) {
@@ -22,8 +22,8 @@ namespace Views {
         sprite.setTexture(texture);
 
         // calculate and set middle of sprite
-        double spriteWidth = sprite.getGlobalBounds().width;
-        double spriteHeight = sprite.getGlobalBounds().height;
+        float spriteWidth = sprite.getGlobalBounds().width;
+        float spriteHeight = sprite.getGlobalBounds().height;
         sprite.setOrigin(spriteWidth/2, spriteHeight/2);
 
         // give entity knowledge of width and height of sprite in game coordinates
@@ -31,7 +31,7 @@ namespace Views {
         entity->setEntityHeight(Transformation::instance().toGameCoordsY(0)-Transformation::instance().toGameCoordsY(spriteHeight));
 
         // convert coords to window coords and set the sprite position
-        std::pair<double, double> windowCoords = Transformation::instance().transform(entity.get()->getCoords().first,
+        std::pair<float, float> windowCoords = Transformation::instance().transform(entity.get()->getCoords().first,
                                                                                       entity.get()->getCoords().second);
         sprite.setPosition(windowCoords.first, windowCoords.second);
     }

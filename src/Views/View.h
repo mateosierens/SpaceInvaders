@@ -20,9 +20,9 @@ namespace Views {
     public:
         View(std::shared_ptr<Entities::Entity> &entity, const std::string &textureFile);
 
-        virtual ~View() {};
+        ~View() override = default;
 
-        virtual void onNotify(const Entities::Entity &entity, std::string event) = 0;
+        void onNotify(const Entities::Entity &entity, std::string event) override = 0;
 
         virtual void makeThisObserver(std::shared_ptr<Entities::Entity> &entity);
 

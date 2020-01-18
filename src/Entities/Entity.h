@@ -11,30 +11,30 @@
 namespace Entities {
     class Entity : public ObserverPattern::Subject {
     private:
-        std::pair<double, double> coords; // coordinates of entity in game logic
+        std::pair<float, float> coords; // coordinates of entity in game logic
 
         // width and height of entity in game logic
-        double entityWidth;
-        double entityHeight;
+        float entityWidth;
+        float entityHeight;
 
     public:
         virtual ~Entity();
 
         Entity();
 
-        Entity(const std::pair<double, double> &coords);
+        explicit Entity(const std::pair<float, float> &coords);
 
-        const std::pair<double, double> &getCoords() const;
+        const std::pair<float, float> &getCoords() const;
 
-        void setCoords(const std::pair<double, double> &coords);
+        void setCoords(const std::pair<float, float> &coords);
 
-        double getEntityWidth() const;
+        float getEntityWidth() const;
 
-        void setEntityWidth(double entityWidth);
+        void setEntityWidth(float entityWidth);
 
-        double getEntityHeight() const;
+        float getEntityHeight() const;
 
-        void setEntityHeight(double entityHeight);
+        void setEntityHeight(float entityHeight);
 
         bool collision(std::shared_ptr<Entity> otherEntity);
     };

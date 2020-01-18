@@ -14,11 +14,11 @@ namespace Controllers {
     public:
         virtual ~Controller();
 
-        Controller(const std::shared_ptr<Entities::Entity> &entity);
+        explicit Controller(const std::shared_ptr<Entities::Entity> &entity);
 
         const std::shared_ptr<Entities::Entity> &getEntity() const;
 
-        std::pair<double, double> getCoords();
+        std::pair<float, float> getCoords();
 
         double getEntityWidth();
 

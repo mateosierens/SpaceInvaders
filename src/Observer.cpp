@@ -4,6 +4,4 @@
 
 #include "Observer.h"
 
-ObserverPattern::Observer::~Observer() {
-
-}
+ObserverPattern::Observer::~Observer() = default;

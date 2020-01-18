@@ -13,7 +13,7 @@
 namespace Controllers {
     class PlayerShipController : public Controller {
     public:
-        PlayerShipController(const std::shared_ptr<Entities::Entity> &entity);
+        explicit PlayerShipController(const std::shared_ptr<Entities::Entity> &entity);
 
         void move(const char &c);
 
@@ -23,7 +23,7 @@ namespace Controllers {
 
         void addEnemyBullet(const std::shared_ptr<BulletController> &enemyBullet);
 
-        void update();
+        void update() override;
 
         bool alive();
 

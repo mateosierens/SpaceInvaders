@@ -5,19 +5,17 @@
 #include "Bullet.h"
 
 namespace Entities {
-    Bullet::Bullet(const double &x, const double &y) : Entity(std::make_pair(x,y)) {}
+    Bullet::Bullet(const float &x, const float &y) : Entity(std::make_pair(x,y)) {}
 
     void Bullet::update() {
-        std::pair<double, double> newCoords = getCoords();
+        std::pair<float, float> newCoords = getCoords();
         if (enemy) newCoords.second -= 0.04;
         else newCoords.second += 0.04;
         setCoords(newCoords);
         notify(*this, "updateBullet");
     }
 
-    Bullet::~Bullet() {
-
-    }
+    Bullet::~Bullet() = default;
 
     void Bullet::removeBullet() {
         notify(*this, "remove");

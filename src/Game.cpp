@@ -44,9 +44,10 @@ void Game::startGame() {
     if (currentLevel == 0) {
         // create window background
         try {
-            if (!bgTexture.loadFromFile("background.png")) {
+            if (!bgTexture.loadFromFile("./resources/background.png")) {
                 throw std::runtime_error ("Couldn't find background image, "
-                                          "please include an image with filename background.png");
+                                          "please include an image with filename background.png"
+                                          "in the resources folder");
             }
 
         } catch (std::exception& e) {
@@ -60,9 +61,10 @@ void Game::startGame() {
 
         // initialize game over screen
         try {
-            if (!goTexture.loadFromFile("gameOver.png")) {
+            if (!goTexture.loadFromFile("./resources/gameOver.png")) {
                 throw std::runtime_error ("Couldn't find game over image, "
-                                          "please include an image with filename gameOver.png");
+                                          "please include an image with filename gameOver.png"
+                                          "in the resources folder");
             }
         } catch (std::exception &e) {
             std::cout << e.what() << std::endl;
@@ -75,9 +77,10 @@ void Game::startGame() {
 
         // initialize win screen
         try {
-            if (!wsTexture.loadFromFile("winScreen.png")) {
+            if (!wsTexture.loadFromFile("./resources/winScreen.png")) {
                 throw std::runtime_error ("Couldn't find game over image, "
-                                          "please include an image with filename gameOver.png");
+                                          "please include an image with filename gameOver.png"
+                                          "in the resources folder");
             }
         } catch (std::exception &e) {
             std::cout << e.what() << std::endl;
@@ -90,9 +93,10 @@ void Game::startGame() {
 
         // create font
         try {
-            if (!comicSans.loadFromFile("COMIC.TTF")) {
+            if (!comicSans.loadFromFile("./resources/COMIC.TTF")) {
                 throw std::runtime_error ("Couldn't find font, "
-                                          "please include a font file with filename COMIC.TTF");
+                                          "please include a font file with filename COMIC.TTF"
+                                          "in the resources folder");
             }
         } catch (std::exception &e) {
             std::cout << e.what() << std::endl;
@@ -101,10 +105,10 @@ void Game::startGame() {
         // create playership
         std::string stringPlayerX = j["player"]["x"];
         std::string stringPlayerY = j["player"]["y"];
-        double playerX = std::stod(stringPlayerX);
-        double playerY = std::stod(stringPlayerY);
+        float playerX = std::stof(stringPlayerX);
+        float playerY = std::stof(stringPlayerY);
         std::shared_ptr<Entities::Entity> ship = std::make_shared<Entities::PlayerShip>(playerX, playerY);
-        std::shared_ptr<Views::View> shipView = std::make_shared<Views::PlayerShipView>(ship, "playerShip.png");
+        std::shared_ptr<Views::View> shipView = std::make_shared<Views::PlayerShipView>(ship, "./resources/playerShip.png");
         player = std::make_shared<Controllers::PlayerShipController>(ship);
         shipView->makeThisObserver(ship);
         views.push_back(shipView);
@@ -114,14 +118,18 @@ void Game::startGame() {
         playerLives.setCharacterSize(50);
     }
 
+    // set time between two enemies shooting
+    std::string shootPeriod = j["enemyShootPeriod"];
+    enemyShootPeriod = std::stoi(shootPeriod);
+
     // create enemies
     for (int i = 0; i < j["enemies"].size(); ++i) {
         std::string strX = j["enemies"][i]["x"];
         std::string strY = j["enemies"][i]["y"];
-        double enemyX = std::stod(strX);
-        double enemyY = std::stod(strY);
+        float enemyX = std::stof(strX);
+        float enemyY = std::stof(strY);
         std::shared_ptr<Entities::Entity> enemy = std::make_shared<Entities::EnemyShip>(enemyX, enemyY);
-        std::shared_ptr<Views::View> enemyView = std::make_shared<Views::EnemyShipView>(enemy, "enemyShip.png");
+        std::shared_ptr<Views::View> enemyView = std::make_shared<Views::EnemyShipView>(enemy, "./resources/enemyShip.png");
         enemyView->makeThisObserver(enemy);
         views.push_back(enemyView);
         std::shared_ptr<Controllers::EnemyShipController> enemyController = std::make_shared<Controllers::EnemyShipController>(enemy);
@@ -137,7 +145,7 @@ void Game::startGame() {
                 && enemyShips[k]->getCoords().second == enemyY) {
                     enemyShips.insert(enemyShips.begin()+k, enemyController);
                     inserted = true;
-                    k = enemyShips.size()-1;
+                    k = (int) enemyShips.size()-1;
                 }
                 k++;
             }
@@ -156,8 +164,9 @@ void Game::runGame() {
 
     sf::Music gameMusic;
     try {
-        if (!gameMusic.openFromFile("gameMusic.ogg")) {
-            throw std::runtime_error ("Couldn't find file with name gameMusic.ogg, please include this file");
+        if (!gameMusic.openFromFile("./resources/gameMusic.ogg")) {
+            throw std::runtime_error ("Couldn't find file with name gameMusic.ogg, please include this file"
+                                      "in the resources folder");
         }
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
@@ -165,8 +174,9 @@ void Game::runGame() {
 
     sf::Music gameOverMusic;
     try {
-        if (!gameOverMusic.openFromFile("gameOverSound.ogg")) {
-            throw std::runtime_error ("Couldn't find file with name gameOverMusic.ogg, please include this file");
+        if (!gameOverMusic.openFromFile("./resources/gameOverSound.ogg")) {
+            throw std::runtime_error ("Couldn't find file with name gameOverMusic.ogg, please include this file"
+                                      "in the resources folder");
         }
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
@@ -174,8 +184,9 @@ void Game::runGame() {
 
     sf::Music gameWinMusic;
     try {
-        if (!gameWinMusic.openFromFile("winMusic.ogg")) {
-            throw std::runtime_error ("Couldn't find file with name winMusic.ogg, please include this file");
+        if (!gameWinMusic.openFromFile("./resources/winMusic.ogg")) {
+            throw std::runtime_error ("Couldn't find file with name winMusic.ogg, please include this file"
+                                      "in the resources folder");
         }
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
@@ -204,7 +215,7 @@ void Game::runGame() {
          */
 
         // check all the window's events that were triggered since the last iteration of the loop
-        sf::Event event;
+        sf::Event event{};
         while (window->pollEvent(event))
         {
             // "close requested" event: we close the window
@@ -248,7 +259,7 @@ void Game::runGame() {
                                                                               player->getCoords().second + player->getEntityHeight()/2);
 
                     // make bullet view and make it observer of the bullet we created
-                    std::shared_ptr<Views::View> bulletView = std::make_shared<Views::BulletView>(bullet, "bullet.png");
+                    std::shared_ptr<Views::View> bulletView = std::make_shared<Views::BulletView>(bullet, "./resources/bullet.png");
                     bulletView->makeThisObserver(bullet);
 
                     // make a controller for the bullet we just created
@@ -263,7 +274,7 @@ void Game::runGame() {
                     // playerShipController now uses update function so it needs to be in list of controllers
 
 
-                    for (std::shared_ptr<Controllers::EnemyShipController> enemy: enemyShips) {
+                    for (const std::shared_ptr<Controllers::EnemyShipController> &enemy: enemyShips) {
                         enemy->setPlayerBullet(playerBulletController);
                     }
                 }
@@ -275,7 +286,7 @@ void Game::runGame() {
 
             // let controllers update their entities (e.g. Bullets)
             std::vector<std::shared_ptr<Controllers::Controller>> newControllers;
-            for (std::shared_ptr<Controllers::Controller> controller: controllers) {
+            for (const std::shared_ptr<Controllers::Controller> &controller: controllers) {
                 // if bullet flies out of the window we want to delete it so we also want to delete the controller
                 // out of the vector of controllers
                 if (controller->getEntity() != nullptr) {
@@ -299,7 +310,7 @@ void Game::runGame() {
 
             // find index of leftmost and rightmost enemy
             int leftmost = 0;
-            int rightmost = enemyShips.size()-1;
+            int rightmost = (int) enemyShips.size()-1;
 
             for (int j = 0; j < enemyShips.size(); ++j) {
                 if (enemyShips[j]->getEntity() != nullptr &&
@@ -367,7 +378,8 @@ void Game::runGame() {
                 }
 
                 // select random enemy in vector
-                int toShoot = randomInt(0, enemyShips.size()-1);
+
+                int toShoot = randomInt(0, (int) enemyShips.size()-1);
                 std::shared_ptr<Controllers::EnemyShipController> enemyShooter = enemyShips[toShoot];
 
                 // initialise enemy bullet, tell player there is a new enemyBullet on screen
@@ -377,7 +389,7 @@ void Game::runGame() {
                                                                           enemyShooter->getCoords().second - enemyShooter->getEntityHeight()/2);
 
                 // make bullet view and make it observer of the bullet we created
-                std::shared_ptr<Views::View> bulletView = std::make_shared<Views::BulletView>(bullet, "enemyBullet.png");
+                std::shared_ptr<Views::View> bulletView = std::make_shared<Views::BulletView>(bullet, "./resources/enemyBullet.png");
                 bulletView->makeThisObserver(bullet);
 
                 // make a controller for the bullet we just created
@@ -398,7 +410,7 @@ void Game::runGame() {
                 if (transparency < 255) {
                     transparency += 1;
                     sf::Color gameOverColor = gameOver.getColor();
-                    gameOverColor.a = (int) transparency;
+                    gameOverColor.a = (sf::Uint8) transparency;
                     gameOver.setColor(gameOverColor);
                 }
             } else if (gameWin) {
@@ -406,7 +418,7 @@ void Game::runGame() {
                 if (transparency < 255) {
                     transparency += 1;
                     sf::Color winColor = winScreen.getColor();
-                    winColor.a = (int) transparency;
+                    winColor.a = (sf::Uint8) transparency;
                     winScreen.setColor(winColor);
                 }
             }
@@ -434,7 +446,7 @@ void Game::runGame() {
             window->draw(playerLives);
 
             std::vector<std::shared_ptr<Views::View>> newViews;
-            for (std::shared_ptr<Views::View> view: views) {
+            for (const std::shared_ptr<Views::View> &view: views) {
                 if (!view->isDeleted()) {
                     window->draw(view->getSprite());
                     newViews.push_back(view);
@@ -460,7 +472,7 @@ void Game::runGame() {
         }
 
         // check if enemies collide with player, if so player dies
-        for (std::shared_ptr<Controllers::EnemyShipController> enemyShip: enemyShips) {
+        for (const std::shared_ptr<Controllers::EnemyShipController> &enemyShip: enemyShips) {
             if (enemyShip->getEntity() != nullptr && enemyShip->getEntity()->collision(player->getEntity()))
                 player->kill();
         }

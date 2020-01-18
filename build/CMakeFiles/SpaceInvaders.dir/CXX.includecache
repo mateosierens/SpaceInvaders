@@ -1,0 +1,564 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/BulletController.cpp
+BulletController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/BulletController.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/BulletController.h
+Controller.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/Controller.h
+../Entities/Bullet.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Bullet.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/Controller.cpp
+Controller.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/Controller.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/Controller.h
+../Entities/Entity.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Entity.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/EnemyShipController.cpp
+EnemyShipController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/EnemyShipController.h
+../Entities/EnemyShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/EnemyShip.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/EnemyShipController.h
+Controller.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/Controller.h
+BulletController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/BulletController.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/PlayerShipController.cpp
+PlayerShipController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/PlayerShipController.h
+../Entities/PlayerShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/PlayerShip.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/PlayerShipController.h
+Controller.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/Controller.h
+BulletController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/BulletController.h
+../Entities/Entity.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Entity.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Bullet.cpp
+Bullet.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Bullet.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Bullet.h
+Entity.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Entity.h
+EnemyShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/EnemyShip.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/EnemyShip.cpp
+EnemyShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/EnemyShip.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/EnemyShip.h
+Entity.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Entity.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Entity.cpp
+Entity.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Entity.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Entity.h
+utility
+-
+../Subject.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Subject.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/PlayerShip.cpp
+PlayerShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/PlayerShip.h
+../Views/PlayerShipView.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/PlayerShipView.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/PlayerShip.h
+Entity.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Entity.h
+Bullet.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Bullet.h
+../Controllers/BulletController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/BulletController.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Game.cpp
+fstream
+-
+exception
+-
+Game.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Game.h
+Entities/PlayerShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/PlayerShip.h
+Views/PlayerShipView.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/PlayerShipView.h
+Controllers/PlayerShipController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/PlayerShipController.h
+Views/BulletView.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/BulletView.h
+Stopwatch.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Stopwatch.h
+Entities/EnemyShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/EnemyShip.h
+Views/EnemyShipView.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/EnemyShipView.h
+Controllers/EnemyShipController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/EnemyShipController.h
+json.hpp
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/json.hpp
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Game.h
+iostream
+-
+SFML/Graphics.hpp
+-
+SFML/Audio.hpp
+-
+memory
+-
+Views/View.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/View.h
+Controllers/Controller.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/Controller.h
+Controllers/PlayerShipController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/PlayerShipController.h
+Controllers/EnemyShipController.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Controllers/EnemyShipController.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Observer.cpp
+Observer.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Observer.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Observer.h
+string
+-
+memory
+-
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Stopwatch.h
+iostream
+-
+chrono
+-
+thread
+-
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Subject.cpp
+Subject.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Subject.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Subject.h
+Observer.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Observer.h
+memory
+-
+iostream
+-
+vector
+-
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Transformation.h
+memory
+-
+SFML/Graphics.hpp
+-
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/BulletView.cpp
+BulletView.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/BulletView.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/BulletView.h
+../Entities/Entity.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/Entity.h
+View.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/View.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/EnemyShipView.cpp
+EnemyShipView.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/EnemyShipView.h
+../Entities/EnemyShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/EnemyShip.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/EnemyShipView.h
+View.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/View.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/PlayerShipView.cpp
+PlayerShipView.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/PlayerShipView.h
+../Entities/PlayerShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/PlayerShip.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/PlayerShipView.h
+View.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/View.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/View.cpp
+View.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/View.h
+../Entities/PlayerShip.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Entities/PlayerShip.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Views/View.h
+memory
+-
+SFML/Graphics.hpp
+-
+../Observer.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Observer.h
+../Transformation.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Transformation.h
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/json.hpp
+algorithm
+-
+cassert
+-
+ciso646
+-
+cstddef
+-
+functional
+-
+initializer_list
+-
+iosfwd
+-
+iterator
+-
+memory
+-
+numeric
+-
+string
+-
+utility
+-
+vector
+-
+utility
+-
+algorithm
+-
+array
+-
+ciso646
+-
+forward_list
+-
+iterator
+-
+map
+-
+string
+-
+tuple
+-
+type_traits
+-
+unordered_map
+-
+utility
+-
+valarray
+-
+exception
+-
+stdexcept
+-
+string
+-
+cstddef
+-
+utility
+-
+stdint.h
+-
+stdint.h
+-
+cstdlib
+-
+ciso646
+-
+cstddef
+-
+type_traits
+-
+ciso646
+-
+limits
+-
+type_traits
+-
+utility
+-
+iterator
+-
+type_traits
+-
+cstdint
+-
+map
+-
+memory
+-
+string
+-
+vector
+-
+array
+-
+ciso646
+-
+cstddef
+-
+cstdint
+-
+string
+-
+algorithm
+-
+ciso646
+-
+iterator
+-
+string
+-
+tuple
+-
+type_traits
+-
+utility
+-
+valarray
+-
+vector
+-
+cstddef
+-
+iterator
+-
+string
+-
+tuple
+-
+algorithm
+-
+array
+-
+cassert
+-
+cmath
+-
+cstddef
+-
+cstdint
+-
+cstdio
+-
+cstring
+-
+iterator
+-
+limits
+-
+string
+-
+utility
+-
+array
+-
+cassert
+-
+cstddef
+-
+cstdio
+-
+cstring
+-
+istream
+-
+iterator
+-
+memory
+-
+numeric
+-
+string
+-
+type_traits
+-
+utility
+-
+cassert
+-
+cstddef
+-
+string
+-
+utility
+-
+vector
+-
+cstdint
+-
+utility
+-
+string
+-
+array
+-
+clocale
+-
+cstddef
+-
+cstdio
+-
+cstdlib
+-
+initializer_list
+-
+string
+-
+utility
+-
+vector
+-
+cassert
+-
+cmath
+-
+cstdint
+-
+functional
+-
+string
+-
+utility
+-
+vector
+-
+cstddef
+-
+limits
+-
+ciso646
+-
+iterator
+-
+type_traits
+-
+cstddef
+-
+iterator
+-
+utility
+-
+algorithm
+-
+cassert
+-
+cctype
+-
+numeric
+-
+string
+-
+utility
+-
+vector
+-
+initializer_list
+-
+utility
+-
+algorithm
+-
+array
+-
+cstdint
+-
+cstring
+-
+limits
+-
+string
+-
+algorithm
+-
+cstddef
+-
+ios
+-
+iterator
+-
+memory
+-
+ostream
+-
+string
+-
+vector
+-
+algorithm
+-
+array
+-
+cassert
+-
+ciso646
+-
+clocale
+-
+cmath
+-
+cstddef
+-
+cstdint
+-
+cstdio
+-
+limits
+-
+string
+-
+type_traits
+-
+utility
+-
+array
+-
+cassert
+-
+ciso646
+-
+cmath
+-
+cstdint
+-
+cstring
+-
+limits
+-
+type_traits
+-
+
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/main.cpp
+iostream
+-
+Game.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Game.h
+Transformation.h
+/home/mateo/Documents/Informatica/Tweede Bachelor/GP/SpaceInvaders/src/Transformation.h
+

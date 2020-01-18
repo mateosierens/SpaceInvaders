@@ -24,22 +24,22 @@ private:
     sf::Sprite gameOver;
     sf::Texture goTexture;
     std::shared_ptr<sf::RenderWindow> window;
-    double transparency = 0; // fade in over game over screen
+    int transparency = 0; // fade in over game over screen
     sf::Font comicSans;
     sf::Text playerLives;
     sf::Sprite winScreen;
     sf::Texture wsTexture;
 
     // game objects
-    std::shared_ptr<Controllers::PlayerShipController> player;
-    std::vector<std::shared_ptr<Views::View>> views;
-    std::vector<std::shared_ptr<Controllers::Controller>> controllers;
-    std::vector<std::shared_ptr<Controllers::EnemyShipController>> enemyShips;
+    std::shared_ptr<Controllers::PlayerShipController> player; // pointer to player
+    std::vector<std::shared_ptr<Views::View>> views; // list of pointers to views for drawing sprites on the window
+    std::vector<std::shared_ptr<Controllers::Controller>> controllers; // list of controllers to update the entities
+    std::vector<std::shared_ptr<Controllers::EnemyShipController>> enemyShips; // seperate list of enemyShips to easily move enemies together
 
     // game logic
     int currentLevel = 0;
     int levelCount = 2;
-    int enemyShootPeriod = 100;
+    int enemyShootPeriod;
     bool gameOverBool = false;
     bool gameWin = false;
     bool winMusicPlaying = false;

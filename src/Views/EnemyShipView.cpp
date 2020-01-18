@@ -6,9 +6,7 @@
 #include "../Entities/EnemyShip.h"
 
 namespace Views {
-    EnemyShipView::~EnemyShipView() {
-
-    }
+    EnemyShipView::~EnemyShipView() = default;
 
     void EnemyShipView::onNotify(const Entities::Entity &entity, std::string event) {
         if (event == "moveLeftEnemy" || event == "moveRightEnemy" || event == "moveDownEnemy") {
@@ -16,7 +14,7 @@ namespace Views {
             sf::Sprite playerShip = getSprite();
 
             // set new player position on window
-            std::pair<double, double> windowCoords = Transformation::instance().transform(entity.getCoords().first,
+            std::pair<float, float> windowCoords = Transformation::instance().transform(entity.getCoords().first,
                                                                                           entity.getCoords().second);
             playerShip.setPosition(windowCoords.first, windowCoords.second);
             setSprite(playerShip);

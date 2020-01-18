@@ -38,7 +38,7 @@ namespace Controllers {
             if (ship->getEnemyBullets()[i]->getEntity() == nullptr)
                 ship->removeEnemyBullet(i);
         }
-        for (std::shared_ptr<BulletController> enemyBullet: ship->getEnemyBullets()) {
+        for (const std::shared_ptr<BulletController> &enemyBullet: ship->getEnemyBullets()) {
             if (ship->collision(enemyBullet->getEntity())) {
                 ship->decreaseLives();
                 enemyBullet->hitEnemyOrPlayer();

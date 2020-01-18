@@ -8,7 +8,7 @@
 namespace Controllers {
     EnemyShipController::EnemyShipController(const std::shared_ptr<Entities::Entity> &entity) : Controller(entity) {}
 
-    EnemyShipController::~EnemyShipController() {}
+    EnemyShipController::~EnemyShipController() = default;
 
     void EnemyShipController::update() {
         // check for collision with playerBullet

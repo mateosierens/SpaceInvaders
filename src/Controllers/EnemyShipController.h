@@ -14,7 +14,7 @@ namespace Controllers {
     private:
         std::shared_ptr<BulletController> playerBullet;
     public:
-        EnemyShipController(const std::shared_ptr<Entities::Entity> &entity);
+        explicit EnemyShipController(const std::shared_ptr<Entities::Entity> &entity);
 
         ~EnemyShipController() override;
 

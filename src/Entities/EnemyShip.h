@@ -15,7 +15,7 @@ namespace Entities {
         // they will start moving right by setting the bool to false
         bool movingLeft = true;
     public:
-        EnemyShip(const double &x, const double &y);
+        EnemyShip(const float &x, const float &y);
 
         void moveLeft();
 

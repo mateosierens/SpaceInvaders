@@ -11,7 +11,7 @@ namespace Controllers {
         return entity;
     }
 
-    std::pair<double, double> Controller::getCoords() {
+    std::pair<float, float> Controller::getCoords() {
         return entity->getCoords();
     }
 
@@ -23,9 +23,7 @@ namespace Controllers {
         return entity->getEntityHeight();
     }
 
-    Controller::~Controller() {
-
-    }
+    Controller::~Controller() = default;
 
     void Controller::update() {
         // base update function

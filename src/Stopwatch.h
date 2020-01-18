@@ -16,18 +16,13 @@ public:
         return instance_;
     }
 
-    void sleep(int milliseconds) {
-        std::chrono::milliseconds timespan(milliseconds);
-        std::this_thread::sleep_for(timespan);
-    }
-
     std::chrono::system_clock::time_point previous;
     std::chrono::system_clock::time_point current;
-    double elapsed;
+    double elapsed = 0; // 0 by default
 
 
 private:
-    Stopwatch() {};
+    Stopwatch() = default;
 };
 
 #endif //SPACEINVADERS_STOPWATCH_H

@@ -32,5 +32,6 @@
   "player": {
       "x": "0",
       "y": "-2"
-    }
+    },
+  "enemyShootPeriod": "100"
 }

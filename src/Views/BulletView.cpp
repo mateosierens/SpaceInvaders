@@ -9,9 +9,7 @@ namespace Views {
 
     }
 
-    BulletView::~BulletView() {
-
-    }
+    BulletView::~BulletView() = default;
 
     void BulletView::onNotify(const Entities::Entity &entity, std::string event) {
         if (event == "updateBullet") {
@@ -19,7 +17,7 @@ namespace Views {
             sf::Sprite bullet = getSprite();
 
             // set new bullet position on window
-            std::pair<double, double> windowCoords = Transformation::instance().transform(entity.getCoords().first,
+            std::pair<float, float> windowCoords = Transformation::instance().transform(entity.getCoords().first,
                                                                                           entity.getCoords().second);
             bullet.setPosition(windowCoords.first, windowCoords.second);
             setSprite(bullet);

@@ -6,12 +6,12 @@
 #include "../Views/PlayerShipView.h"
 
 namespace Entities {
-    PlayerShip::PlayerShip(const double &x, const double &y) : Entity(std::make_pair(x,y)) {}
+    PlayerShip::PlayerShip(const float &x, const float &y) : Entity(std::make_pair(x,y)) {}
 
     void PlayerShip::moveLeft() {
         // do check if left side of entity reaches the side of the window, if not do move
         if (getCoords().first - (getEntityWidth()/2) > -4) {
-            std::pair<double, double> newCoords = getCoords();
+            std::pair<float, float> newCoords = getCoords();
             newCoords.first -= 0.04;
             setCoords(newCoords);
             notify(*this, "moveLeft");
@@ -21,7 +21,7 @@ namespace Entities {
     void PlayerShip::moveRight() {
         // do check if right side of entity reaches the side of the window, if not do move
         if (getCoords().first + (getEntityWidth()/2) < 4) {
-            std::pair<double, double> newCoords = getCoords();
+            std::pair<float, float> newCoords = getCoords();
             newCoords.first += 0.04;
             setCoords(newCoords);
             notify(*this, "moveRight");

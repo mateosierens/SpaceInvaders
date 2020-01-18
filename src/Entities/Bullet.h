@@ -14,9 +14,9 @@ namespace Entities {
     private:
         bool enemy = false;
     public:
-        Bullet(const double &x, const double &y);
+        Bullet(const float &x, const float &y);
 
-        virtual ~Bullet();
+        ~Bullet() override;
 
         void update();
 

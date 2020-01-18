@@ -15,11 +15,11 @@ namespace Controllers {
         bool bulletOutOfRange = false;
 
     public:
-        virtual ~BulletController();
+        ~BulletController() override;
 
         void update() override;
 
-        BulletController(const std::shared_ptr<Entities::Entity> &entity);
+        explicit BulletController(const std::shared_ptr<Entities::Entity> &entity);
 
         bool isBulletOutOfRange() const;
 

@@ -6,17 +6,14 @@
 #include "../Entities/PlayerShip.h"
 
 namespace Views {
-    PlayerShipView::~PlayerShipView() {
-
-    }
-
+    PlayerShipView::~PlayerShipView() = default;
     void PlayerShipView::onNotify(const Entities::Entity &entity, std::string event) {
         if (event == "moveLeft" || event == "moveRight") {
             // move sprite
             sf::Sprite playerShip = getSprite();
 
             // set new player position on window
-            std::pair<double, double> windowCoords = Transformation::instance().transform(entity.getCoords().first,
+            std::pair<float, float> windowCoords = Transformation::instance().transform(entity.getCoords().first,
                                                                                           entity.getCoords().second);
             playerShip.setPosition(windowCoords.first, windowCoords.second);
             setSprite(playerShip);
