@@ -25,10 +25,6 @@ namespace Controllers {
 
     Controller::~Controller() = default;
 
-    void Controller::update() {
-        // base update function
-    }
-
     void Controller::setEntity(const std::shared_ptr<Entities::Entity> &entity) {
         Controller::entity = entity;
     }

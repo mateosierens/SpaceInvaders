@@ -26,7 +26,7 @@ namespace Controllers {
 
         void setEntity(const std::shared_ptr<Entities::Entity> &entity);
 
-        virtual void update();
+        virtual void update() = 0;
     };
 }
 

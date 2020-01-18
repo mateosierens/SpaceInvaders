@@ -34,7 +34,7 @@ private:
     std::shared_ptr<Controllers::PlayerShipController> player; // pointer to player
     std::vector<std::shared_ptr<Views::View>> views; // list of pointers to views for drawing sprites on the window
     std::vector<std::shared_ptr<Controllers::Controller>> controllers; // list of controllers to update the entities
-    std::vector<std::shared_ptr<Controllers::EnemyShipController>> enemyShips; // seperate list of enemyShips to easily move enemies together
+    std::vector<std::shared_ptr<Controllers::EnemyShipController>> enemyShips; // separate list of enemyShips to easily move enemies together
 
     // game logic
     int currentLevel = 0;

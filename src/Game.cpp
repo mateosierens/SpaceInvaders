@@ -38,6 +38,16 @@ void Game::startGame() {
     // read from json file
     std::string level = "Level" + std::to_string(currentLevel) + ".json";
     std::ifstream file(level);
+
+    // check if level file exists
+    try {
+        if (!file.good()) {
+            throw std::runtime_error ("Couldn't find level file " + level + ", please include this in SpaceInvaders directory.");
+        }
+    } catch (std::exception &e) {
+        std::cout << e.what() << std::endl;
+    }
+
     nlohmann::json j;
     file >> j;
 
