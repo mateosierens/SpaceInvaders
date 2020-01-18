@@ -27,12 +27,14 @@ private:
     double transparency = 0; // fade in over game over screen
     sf::Font comicSans;
     sf::Text playerLives;
+    sf::Sprite winScreen;
+    sf::Texture wsTexture;
 
     // game objects
-    std::shared_ptr<PlayerShipController> player;
-    std::vector<std::shared_ptr<View>> views;
-    std::vector<std::shared_ptr<Controller>> controllers;
-    std::vector<std::shared_ptr<EnemyShipController>> enemyShips;
+    std::shared_ptr<Controllers::PlayerShipController> player;
+    std::vector<std::shared_ptr<Views::View>> views;
+    std::vector<std::shared_ptr<Controllers::Controller>> controllers;
+    std::vector<std::shared_ptr<Controllers::EnemyShipController>> enemyShips;
 
     // game logic
     int currentLevel = 0;
@@ -40,6 +42,7 @@ private:
     int enemyShootPeriod = 100;
     bool gameOverBool = false;
     bool gameWin = false;
+    bool winMusicPlaying = false;
 
 public:
     Game();

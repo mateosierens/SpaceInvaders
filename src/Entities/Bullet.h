@@ -9,20 +9,23 @@
 #include "Entity.h"
 #include "EnemyShip.h"
 
-class Bullet : public Entity {
-private:
-    bool enemy = false;
-public:
-    Bullet(const double &x, const double &y);
+namespace Entities {
+    class Bullet : public Entity {
+    private:
+        bool enemy = false;
+    public:
+        Bullet(const double &x, const double &y);
 
-    virtual ~Bullet();
+        virtual ~Bullet();
 
-    void update();
+        void update();
 
-    void removeBullet();
+        void removeBullet();
 
-    void setEnemy(bool enemy);
-};
+        void setEnemy(bool enemy);
+    };
+}
+
 
 
 #endif //SPACEINVADERS_BULLET_H

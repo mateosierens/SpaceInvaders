@@ -7,26 +7,30 @@
 
 #include "../Entities/Entity.h"
 
-class Controller {
-private:
-    std::shared_ptr<Entity> entity;
-public:
-    virtual ~Controller();
+namespace Controllers {
+    class Controller {
+    private:
+        std::shared_ptr<Entities::Entity> entity;
+    public:
+        virtual ~Controller();
 
-    Controller(const std::shared_ptr<Entity> &entity);
+        Controller(const std::shared_ptr<Entities::Entity> &entity);
 
-    const std::shared_ptr<Entity> &getEntity() const;
+        const std::shared_ptr<Entities::Entity> &getEntity() const;
 
-    std::pair<double, double> getCoords();
+        std::pair<double, double> getCoords();
 
-    double getEntityWidth();
+        double getEntityWidth();
 
-    double getEntityHeight();
+        double getEntityHeight();
 
-    void setEntity(const std::shared_ptr<Entity> &entity);
+        void setEntity(const std::shared_ptr<Entities::Entity> &entity);
 
-    virtual void update();
-};
+        virtual void update();
+    };
+}
+
+
 
 
 #endif //SPACEINVADERS_CONTROLLER_H

@@ -8,26 +8,30 @@
 
 #include "Entity.h"
 
-class EnemyShip : public Entity {
-private:
-    // enemies will first move left when they spawn, when they reach the border of the window
-    // they will start moving right by setting the bool to false
-    bool movingLeft = true;
-public:
-    EnemyShip(const double &x, const double &y);
+namespace Entities {
+    class EnemyShip : public Entity {
+    private:
+        // enemies will first move left when they spawn, when they reach the border of the window
+        // they will start moving right by setting the bool to false
+        bool movingLeft = true;
+    public:
+        EnemyShip(const double &x, const double &y);
 
-    void moveLeft();
+        void moveLeft();
 
-    void moveRight();
+        void moveRight();
 
-    void moveDown();
+        void moveDown();
 
-    void die();
+        void die();
 
-    bool isMovingLeft() const;
+        bool isMovingLeft() const;
 
-    void setMovingLeft(bool movingLeft);
-};
+        void setMovingLeft(bool movingLeft);
+    };
+}
+
+
 
 
 #endif //SPACEINVADERS_ENEMYSHIP_H

@@ -18,7 +18,7 @@ void ObserverPattern::Subject::removeObserver(std::shared_ptr<Observer> observer
     }
 }
 
-void ObserverPattern::Subject::notify(const Entity &entity, std::string event) {
+void ObserverPattern::Subject::notify(const Entities::Entity &entity, std::string event) {
     for (std::shared_ptr<Observer> obs: observers) {
         obs->onNotify(entity, event);
     }

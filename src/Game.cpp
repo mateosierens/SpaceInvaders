@@ -3,6 +3,7 @@
 //
 
 #include <fstream>
+#include <exception>
 #include "Game.h"
 #include "Entities/PlayerShip.h"
 #include "Views/PlayerShipView.h"
@@ -42,32 +43,69 @@ void Game::startGame() {
 
     if (currentLevel == 0) {
         // create window background
-        bgTexture.loadFromFile("background.png");
+        try {
+            if (!bgTexture.loadFromFile("background.png")) {
+                throw std::runtime_error ("Couldn't find background image, "
+                                          "please include an image with filename background.png");
+            }
+
+        } catch (std::exception& e) {
+            std::cout << e.what() << std::endl;
+        }
         background.setTexture(bgTexture);
         // scale bgTexture to correct window size
         float bgScale_x = window->getSize().x/(float)bgTexture.getSize().x;
         float bgScale_y = window->getSize().y/(float)bgTexture.getSize().y;
         background.setScale(bgScale_x, bgScale_y);
 
-        // create window background
-        goTexture.loadFromFile("gameOver.png");
+        // initialize game over screen
+        try {
+            if (!goTexture.loadFromFile("gameOver.png")) {
+                throw std::runtime_error ("Couldn't find game over image, "
+                                          "please include an image with filename gameOver.png");
+            }
+        } catch (std::exception &e) {
+            std::cout << e.what() << std::endl;
+        }
         gameOver.setTexture(goTexture);
         // scale bgTexture to correct window size
         float goScale_x = window->getSize().x/(float)goTexture.getSize().x;
         float goScale_y = window->getSize().y/(float)goTexture.getSize().y;
         gameOver.setScale(goScale_x, goScale_y);
 
+        // initialize win screen
+        try {
+            if (!wsTexture.loadFromFile("winScreen.png")) {
+                throw std::runtime_error ("Couldn't find game over image, "
+                                          "please include an image with filename gameOver.png");
+            }
+        } catch (std::exception &e) {
+            std::cout << e.what() << std::endl;
+        }
+        winScreen.setTexture(wsTexture);
+        // scale bgTexture to correct window size
+        float wsScale_x = window->getSize().x/(float)wsTexture.getSize().x;
+        float wsScale_y = window->getSize().y/(float)wsTexture.getSize().y;
+        winScreen.setScale(wsScale_x, wsScale_y);
+
         // create font
-        comicSans.loadFromFile("COMIC.TTF");
+        try {
+            if (!comicSans.loadFromFile("COMIC.TTF")) {
+                throw std::runtime_error ("Couldn't find font, "
+                                          "please include a font file with filename COMIC.TTF");
+            }
+        } catch (std::exception &e) {
+            std::cout << e.what() << std::endl;
+        }
 
         // create playership
         std::string stringPlayerX = j["player"]["x"];
         std::string stringPlayerY = j["player"]["y"];
         double playerX = std::stod(stringPlayerX);
         double playerY = std::stod(stringPlayerY);
-        std::shared_ptr<Entity> ship = std::make_shared<PlayerShip>(playerX, playerY);
-        std::shared_ptr<View> shipView = std::make_shared<PlayerShipView>(ship, "playerShip.png");
-        player = std::make_shared<PlayerShipController>(ship);
+        std::shared_ptr<Entities::Entity> ship = std::make_shared<Entities::PlayerShip>(playerX, playerY);
+        std::shared_ptr<Views::View> shipView = std::make_shared<Views::PlayerShipView>(ship, "playerShip.png");
+        player = std::make_shared<Controllers::PlayerShipController>(ship);
         shipView->makeThisObserver(ship);
         views.push_back(shipView);
         controllers.push_back(player);
@@ -82,11 +120,11 @@ void Game::startGame() {
         std::string strY = j["enemies"][i]["y"];
         double enemyX = std::stod(strX);
         double enemyY = std::stod(strY);
-        std::shared_ptr<Entity> enemy = std::make_shared<EnemyShip>(enemyX, enemyY);
-        std::shared_ptr<View> enemyView = std::make_shared<EnemyShipView>(enemy, "enemyShip.png");
+        std::shared_ptr<Entities::Entity> enemy = std::make_shared<Entities::EnemyShip>(enemyX, enemyY);
+        std::shared_ptr<Views::View> enemyView = std::make_shared<Views::EnemyShipView>(enemy, "enemyShip.png");
         enemyView->makeThisObserver(enemy);
         views.push_back(enemyView);
-        std::shared_ptr<EnemyShipController> enemyController = std::make_shared<EnemyShipController>(enemy);
+        std::shared_ptr<Controllers::EnemyShipController> enemyController = std::make_shared<Controllers::EnemyShipController>(enemy);
 
         // make sure enemies are sorted in vector
         if (enemyShips.empty()) enemyShips.push_back(enemyController);
@@ -117,10 +155,31 @@ void Game::runGame() {
     startGame();
 
     sf::Music gameMusic;
-    gameMusic.openFromFile("megalovania.ogg");
+    try {
+        if (!gameMusic.openFromFile("gameMusic.ogg")) {
+            throw std::runtime_error ("Couldn't find file with name gameMusic.ogg, please include this file");
+        }
+    } catch (std::exception &e) {
+        std::cout << e.what() << std::endl;
+    }
 
     sf::Music gameOverMusic;
-    gameOverMusic.openFromFile("gameOverSound.ogg");
+    try {
+        if (!gameOverMusic.openFromFile("gameOverSound.ogg")) {
+            throw std::runtime_error ("Couldn't find file with name gameOverMusic.ogg, please include this file");
+        }
+    } catch (std::exception &e) {
+        std::cout << e.what() << std::endl;
+    }
+
+    sf::Music gameWinMusic;
+    try {
+        if (!gameWinMusic.openFromFile("winMusic.ogg")) {
+            throw std::runtime_error ("Couldn't find file with name winMusic.ogg, please include this file");
+        }
+    } catch (std::exception &e) {
+        std::cout << e.what() << std::endl;
+    }
 
     gameMusic.play();
 
@@ -162,7 +221,6 @@ void Game::runGame() {
             }
             // if the last level is beaten
             else {
-                // TODO: create win screen
                 gameWin = true;
             }
         }
@@ -186,26 +244,26 @@ void Game::runGame() {
                 // if there is no bullet on the playfield yet
                 if (!player->shotBullet()) {
                     // we want to initialise bullet above the player location
-                    std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(player->getCoords().first,
+                    std::shared_ptr<Entities::Entity> bullet = std::make_shared<Entities::Bullet>(player->getCoords().first,
                                                                               player->getCoords().second + player->getEntityHeight()/2);
 
                     // make bullet view and make it observer of the bullet we created
-                    std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
+                    std::shared_ptr<Views::View> bulletView = std::make_shared<Views::BulletView>(bullet, "bullet.png");
                     bulletView->makeThisObserver(bullet);
 
                     // make a controller for the bullet we just created
-                    std::shared_ptr<Controller> bulletController = std::make_shared<BulletController>(bullet);
+                    std::shared_ptr<Controllers::Controller> bulletController = std::make_shared<Controllers::BulletController>(bullet);
                     views.push_back(bulletView);
                     controllers.push_back(bulletController);
 
                     // let playerShip have access to bulletController
-                    std::shared_ptr<BulletController> playerBulletController =
-                            std::dynamic_pointer_cast<BulletController>(bulletController);
+                    std::shared_ptr<Controllers::BulletController> playerBulletController =
+                            std::dynamic_pointer_cast<Controllers::BulletController>(bulletController);
                     player->setBullet(playerBulletController);
                     // playerShipController now uses update function so it needs to be in list of controllers
 
 
-                    for (std::shared_ptr<EnemyShipController> enemy: enemyShips) {
+                    for (std::shared_ptr<Controllers::EnemyShipController> enemy: enemyShips) {
                         enemy->setPlayerBullet(playerBulletController);
                     }
                 }
@@ -216,8 +274,8 @@ void Game::runGame() {
             */
 
             // let controllers update their entities (e.g. Bullets)
-            std::vector<std::shared_ptr<Controller>> newControllers;
-            for (std::shared_ptr<Controller> controller: controllers) {
+            std::vector<std::shared_ptr<Controllers::Controller>> newControllers;
+            for (std::shared_ptr<Controllers::Controller> controller: controllers) {
                 // if bullet flies out of the window we want to delete it so we also want to delete the controller
                 // out of the vector of controllers
                 if (controller->getEntity() != nullptr) {
@@ -228,7 +286,7 @@ void Game::runGame() {
             controllers = newControllers;
 
             // now update enemies seperately as we want all enemies to be moving in sync
-            std::vector<std::shared_ptr<EnemyShipController>> newEnemies;
+            std::vector<std::shared_ptr<Controllers::EnemyShipController>> newEnemies;
             bool noEnemies = enemyShips.empty();
             if (!noEnemies && enemyShips[0]->getEntity() == nullptr) {
                 enemyShips.erase(enemyShips.begin());
@@ -310,20 +368,20 @@ void Game::runGame() {
 
                 // select random enemy in vector
                 int toShoot = randomInt(0, enemyShips.size()-1);
-                std::shared_ptr<EnemyShipController> enemyShooter = enemyShips[toShoot];
+                std::shared_ptr<Controllers::EnemyShipController> enemyShooter = enemyShips[toShoot];
 
                 // initialise enemy bullet, tell player there is a new enemyBullet on screen
                 // and add enemy bullet to controllers
                 // we want to initialise bullet beneath the enemy location
-                std::shared_ptr<Entity> bullet = std::make_shared<Bullet>(enemyShooter->getCoords().first,
+                std::shared_ptr<Entities::Entity> bullet = std::make_shared<Entities::Bullet>(enemyShooter->getCoords().first,
                                                                           enemyShooter->getCoords().second - enemyShooter->getEntityHeight()/2);
 
                 // make bullet view and make it observer of the bullet we created
-                std::shared_ptr<View> bulletView = std::make_shared<BulletView>(bullet, "bullet.png");
+                std::shared_ptr<Views::View> bulletView = std::make_shared<Views::BulletView>(bullet, "enemyBullet.png");
                 bulletView->makeThisObserver(bullet);
 
                 // make a controller for the bullet we just created
-                std::shared_ptr<BulletController> bulletController = std::make_shared<BulletController>(bullet);
+                std::shared_ptr<Controllers::BulletController> bulletController = std::make_shared<Controllers::BulletController>(bullet);
                 bulletController->makeEnemyBullet();
                 views.push_back(bulletView);
                 controllers.push_back(bulletController);
@@ -336,12 +394,20 @@ void Game::runGame() {
             // if the game is game over we want to handle the fade in transparency in this loop as well,
             // so the fade in happens at the same speed on every pc
             if (!player->alive() && !gameWin) {
-                // changing transparency of game over window for fade in
+                // changing transparency of game over screen for fade in
                 if (transparency < 255) {
                     transparency += 1;
                     sf::Color gameOverColor = gameOver.getColor();
                     gameOverColor.a = (int) transparency;
                     gameOver.setColor(gameOverColor);
+                }
+            } else if (gameWin) {
+                // changing transparency of win screen for fade in
+                if (transparency < 255) {
+                    transparency += 1;
+                    sf::Color winColor = winScreen.getColor();
+                    winColor.a = (int) transparency;
+                    winScreen.setColor(winColor);
                 }
             }
 
@@ -367,8 +433,8 @@ void Game::runGame() {
             playerLives.setString(livesLeft);
             window->draw(playerLives);
 
-            std::vector<std::shared_ptr<View>> newViews;
-            for (std::shared_ptr<View> view: views) {
+            std::vector<std::shared_ptr<Views::View>> newViews;
+            for (std::shared_ptr<Views::View> view: views) {
                 if (!view->isDeleted()) {
                     window->draw(view->getSprite());
                     newViews.push_back(view);
@@ -383,19 +449,18 @@ void Game::runGame() {
             // start the game over music
             if (!gameOverBool) gameOverMusic.play();
             gameOverBool = true;
-
             window->draw(gameOver);
         } else if (player->alive() && gameWin) {
             gameMusic.stop();
-            sf::Text winText;
-            winText.setFont(comicSans);
-            winText.setString("Congratulations! You won!");
-            winText.setCharacterSize(50);
-            window->draw(winText);
+
+            if (!winMusicPlaying) gameWinMusic.play();
+            winMusicPlaying = true;
+            window->clear(sf::Color::Black);
+            window->draw(winScreen);
         }
 
         // check if enemies collide with player, if so player dies
-        for (std::shared_ptr<EnemyShipController> enemyShip: enemyShips) {
+        for (std::shared_ptr<Controllers::EnemyShipController> enemyShip: enemyShips) {
             if (enemyShip->getEntity() != nullptr && enemyShip->getEntity()->collision(player->getEntity()))
                 player->kill();
         }

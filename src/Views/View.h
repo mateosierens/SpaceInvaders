@@ -10,29 +10,30 @@
 #include "../Observer.h"
 #include "../Transformation.h"
 
-class View : public ObserverPattern::Observer {
-private:
-    bool deleted = false;
-    std::shared_ptr<Entity> entity;
-    sf::Sprite sprite;
-    sf::Texture texture;
-public:
-    View(std::shared_ptr<Entity> &entity, const std::string &textureFile);
+namespace Views {
+    class View : public ObserverPattern::Observer {
+    private:
+        bool deleted = false;
+        std::shared_ptr<Entities::Entity> entity;
+        sf::Sprite sprite;
+        sf::Texture texture;
+    public:
+        View(std::shared_ptr<Entities::Entity> &entity, const std::string &textureFile);
 
-    virtual ~View() {};
+        virtual ~View() {};
 
-    virtual void onNotify(const Entity &entity, std::string event) = 0;
+        virtual void onNotify(const Entities::Entity &entity, std::string event) = 0;
 
-    virtual void makeThisObserver(std::shared_ptr<Entity> &entity);
+        virtual void makeThisObserver(std::shared_ptr<Entities::Entity> &entity);
 
-    const sf::Sprite &getSprite() const;
+        const sf::Sprite &getSprite() const;
 
-    void setSprite(const sf::Sprite &sprite);
+        void setSprite(const sf::Sprite &sprite);
 
-    bool isDeleted() const;
+        bool isDeleted() const;
 
-    void setDeleted(bool deleted);
-};
-
+        void setDeleted(bool deleted);
+    };
+}
 
 #endif //SPACEINVADERS_VIEW_H

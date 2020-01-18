@@ -9,23 +9,26 @@
 #include "Controller.h"
 #include "../Entities/Bullet.h"
 
-class BulletController : public Controller {
-private:
-    bool bulletOutOfRange = false;
+namespace Controllers {
+    class BulletController : public Controller {
+    private:
+        bool bulletOutOfRange = false;
 
-public:
-    virtual ~BulletController();
+    public:
+        virtual ~BulletController();
 
-    void update() override;
+        void update() override;
 
-    BulletController(const std::shared_ptr<Entity> &entity);
+        BulletController(const std::shared_ptr<Entities::Entity> &entity);
 
-    bool isBulletOutOfRange() const;
+        bool isBulletOutOfRange() const;
 
-    void hitEnemyOrPlayer();
+        void hitEnemyOrPlayer();
 
-    void makeEnemyBullet();
-};
+        void makeEnemyBullet();
+    };
+}
+
 
 
 #endif //SPACEINVADERS_BULLETCONTROLLER_H

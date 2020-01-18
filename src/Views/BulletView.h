@@ -8,14 +8,17 @@
 #include "../Entities/Entity.h"
 #include "View.h"
 
-class BulletView : public View {
-public:
-    BulletView(std::shared_ptr<Entity> &entity, const std::string &textureFile);
+namespace Views {
+    class BulletView : public View {
+    public:
+        BulletView(std::shared_ptr<Entities::Entity> &entity, const std::string &textureFile);
 
-    ~BulletView() override;
+        ~BulletView() override;
 
-    void onNotify(const Entity &entity, std::string event) override;
-};
+        void onNotify(const Entities::Entity &entity, std::string event) override;
+    };
+}
+
 
 
 #endif //SPACEINVADERS_BULLETVIEW_H

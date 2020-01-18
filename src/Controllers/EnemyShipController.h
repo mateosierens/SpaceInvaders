@@ -9,26 +9,30 @@
 #include "Controller.h"
 #include "BulletController.h"
 
-class EnemyShipController : public Controller {
-private:
-    std::shared_ptr<BulletController> playerBullet;
-public:
-    EnemyShipController(const std::shared_ptr<Entity> &entity);
+namespace Controllers {
+    class EnemyShipController : public Controller {
+    private:
+        std::shared_ptr<BulletController> playerBullet;
+    public:
+        EnemyShipController(const std::shared_ptr<Entities::Entity> &entity);
 
-    ~EnemyShipController() override;
+        ~EnemyShipController() override;
 
-    void update() override;
+        void update() override;
 
-    const std::shared_ptr<BulletController> &getPlayerBullet() const;
+        const std::shared_ptr<BulletController> &getPlayerBullet() const;
 
-    void setPlayerBullet(const std::shared_ptr<BulletController> &playerBullet);
+        void setPlayerBullet(const std::shared_ptr<BulletController> &playerBullet);
 
-    bool movingLeft();
+        bool movingLeft();
 
-    void setMovingLeft(bool direction);
+        void setMovingLeft(bool direction);
 
-    void moveDown();
-};
+        void moveDown();
+    };
+}
+
+
 
 
 #endif //SPACEINVADERS_ENEMYSHIPCONTROLLER_H

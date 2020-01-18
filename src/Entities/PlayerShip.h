@@ -9,39 +9,43 @@
 #include "Bullet.h"
 #include "../Controllers/BulletController.h"
 
-class PlayerShip : public Entity {
-private:
-    // initialise bullet with nullptr for check if there is already a playerbullet on screen
-    std::shared_ptr<BulletController> bullet = nullptr;
-    std::vector<std::shared_ptr<BulletController>> enemyBullets;
-    int lives = 3;
-    bool alive = true;
-public:
-    PlayerShip(const double &x, const double &y);
+namespace Entities {
+    class PlayerShip : public Entity {
+    private:
+        // initialise bullet with nullptr for check if there is already a playerbullet on screen
+        std::shared_ptr<Controllers::BulletController> bullet = nullptr;
+        std::vector<std::shared_ptr<Controllers::BulletController>> enemyBullets;
+        int lives = 3;
+        bool alive = true;
+    public:
+        PlayerShip(const double &x, const double &y);
 
-    void moveLeft();
+        void moveLeft();
 
-    void moveRight();
+        void moveRight();
 
-    const std::shared_ptr<BulletController> &getBullet() const;
+        const std::shared_ptr<Controllers::BulletController> &getBullet() const;
 
-    void setBullet(const std::shared_ptr<BulletController> &bullet);
+        void setBullet(const std::shared_ptr<Controllers::BulletController> &bullet);
 
-    void addEnemyBullet(const std::shared_ptr<BulletController> &enemyBullet);
+        void addEnemyBullet(const std::shared_ptr<Controllers::BulletController> &enemyBullet);
 
-    const std::vector<std::shared_ptr<BulletController>> &getEnemyBullets() const;
+        const std::vector<std::shared_ptr<Controllers::BulletController>> &getEnemyBullets() const;
 
-    void removeEnemyBullet(const int &index);
+        void removeEnemyBullet(const int &index);
 
-    void decreaseLives();
+        void decreaseLives();
 
-    int getLives() const;
+        int getLives() const;
 
-    bool isAlive() const;
+        bool isAlive() const;
 
-    void kill();
+        void kill();
 
-};
+    };
+}
+
+
 
 
 #endif //SPACEINVADERS_PLAYERSHIP_H

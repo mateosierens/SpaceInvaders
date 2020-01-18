@@ -8,14 +8,17 @@
 
 #include "View.h"
 
-class EnemyShipView : public View {
-public:
-    ~EnemyShipView() override;
+namespace Views {
+    class EnemyShipView : public View {
+    public:
+        ~EnemyShipView() override;
 
-    void onNotify(const Entity &entity, std::string event) override;
+        void onNotify(const Entities::Entity &entity, std::string event) override;
 
-    EnemyShipView(std::shared_ptr<Entity> &entity, const std::string &textureFile);
-};
+        EnemyShipView(std::shared_ptr<Entities::Entity> &entity, const std::string &textureFile);
+    };
+}
+
 
 
 #endif //SPACEINVADERS_ENEMYSHIPVIEW_H

@@ -21,7 +21,7 @@ namespace ObserverPattern {
         void removeObserver(std::shared_ptr<Observer> observer);
 
     protected:
-        void notify(const Entity& entity, std::string event);
+        void notify(const Entities::Entity& entity, std::string event);
     };
 }
 
