@@ -5,20 +5,18 @@
 #ifndef SPACEINVADERS_ENEMYSHIPVIEW_H
 #define SPACEINVADERS_ENEMYSHIPVIEW_H
 
-
 #include "View.h"
 
 namespace Views {
-    class EnemyShipView : public View {
-    public:
+class EnemyShipView : public View
+{
+public:
         ~EnemyShipView() override;
 
-        void onNotify(const Entities::Entity &entity, std::string event) override;
+        void onNotify(const Entities::Entity& entity, std::string event) override;
 
-        EnemyShipView(std::shared_ptr<Entities::Entity> &entity, const std::string &textureFile);
-    };
-}
+        EnemyShipView(std::shared_ptr<Entities::Entity>& entity, const std::string& textureFile);
+};
+} // namespace Views
 
-
-
-#endif //SPACEINVADERS_ENEMYSHIPVIEW_H
+#endif // SPACEINVADERS_ENEMYSHIPVIEW_H

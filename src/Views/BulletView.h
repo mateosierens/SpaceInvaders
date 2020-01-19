@@ -9,16 +9,15 @@
 #include "View.h"
 
 namespace Views {
-    class BulletView : public View {
-    public:
-        BulletView(std::shared_ptr<Entities::Entity> &entity, const std::string &textureFile);
+class BulletView : public View
+{
+public:
+        BulletView(std::shared_ptr<Entities::Entity>& entity, const std::string& textureFile);
 
         ~BulletView() override;
 
-        void onNotify(const Entities::Entity &entity, std::string event) override;
-    };
-}
+        void onNotify(const Entities::Entity& entity, std::string event) override;
+};
+} // namespace Views
 
-
-
-#endif //SPACEINVADERS_BULLETVIEW_H
+#endif // SPACEINVADERS_BULLETVIEW_H

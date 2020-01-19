@@ -8,15 +8,17 @@
 #include "../Entities/Entity.h"
 
 namespace Controllers {
-    class Controller {
-    private:
+class Controller
+{
+private:
         std::shared_ptr<Entities::Entity> entity;
-    public:
+
+public:
         virtual ~Controller();
 
-        explicit Controller(const std::shared_ptr<Entities::Entity> &entity);
+        explicit Controller(const std::shared_ptr<Entities::Entity>& entity);
 
-        const std::shared_ptr<Entities::Entity> &getEntity() const;
+        const std::shared_ptr<Entities::Entity>& getEntity() const;
 
         std::pair<float, float> getCoords();
 
@@ -24,13 +26,10 @@ namespace Controllers {
 
         double getEntityHeight();
 
-        void setEntity(const std::shared_ptr<Entities::Entity> &entity);
+        void setEntity(const std::shared_ptr<Entities::Entity>& entity);
 
         virtual void update() = 0;
-    };
-}
+};
+} // namespace Controllers
 
-
-
-
-#endif //SPACEINVADERS_CONTROLLER_H
+#endif // SPACEINVADERS_CONTROLLER_H

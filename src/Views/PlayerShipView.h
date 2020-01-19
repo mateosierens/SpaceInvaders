@@ -8,17 +8,15 @@
 #include "View.h"
 
 namespace Views {
-    class PlayerShipView : public View {
-    public:
+class PlayerShipView : public View
+{
+public:
         ~PlayerShipView() override;
 
-        PlayerShipView(std::shared_ptr<Entities::Entity> &entity, const std::string &textureFile);
+        PlayerShipView(std::shared_ptr<Entities::Entity>& entity, const std::string& textureFile);
 
-        void onNotify(const Entities::Entity &entity, std::string event) override;
-    };
-}
+        void onNotify(const Entities::Entity& entity, std::string event) override;
+};
+} // namespace Views
 
-
-
-
-#endif //SPACEINVADERS_PLAYERSHIPVIEW_H
+#endif // SPACEINVADERS_PLAYERSHIPVIEW_H

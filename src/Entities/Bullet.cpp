@@ -5,24 +5,22 @@
 #include "Bullet.h"
 
 namespace Entities {
-    Bullet::Bullet(const float &x, const float &y) : Entity(std::make_pair(x,y)) {}
+Bullet::Bullet(const float& x, const float& y) : Entity(std::make_pair(x, y)) {}
 
-    void Bullet::update() {
+void Bullet::update()
+{
         std::pair<float, float> newCoords = getCoords();
-        if (enemy) newCoords.second -= 0.04;
-        else newCoords.second += 0.04;
+        if (enemy)
+                newCoords.second -= 0.04;
+        else
+                newCoords.second += 0.04;
         setCoords(newCoords);
         notify(*this, "updateBullet");
-    }
-
-    Bullet::~Bullet() = default;
-
-    void Bullet::removeBullet() {
-        notify(*this, "remove");
-    }
-
-    void Bullet::setEnemy(bool enemy) {
-        Bullet::enemy = enemy;
-    }
 }
 
+Bullet::~Bullet() = default;
+
+void Bullet::removeBullet() { notify(*this, "remove"); }
+
+void Bullet::setEnemy(bool enemy) { Bullet::enemy = enemy; }
+} // namespace Entities

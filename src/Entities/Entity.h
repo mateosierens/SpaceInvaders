@@ -5,28 +5,29 @@
 #ifndef SPACEINVADERS_ENTITY_H
 #define SPACEINVADERS_ENTITY_H
 
-#include <utility>
 #include "../Subject.h"
+#include <utility>
 
 namespace Entities {
-    class Entity : public ObserverPattern::Subject {
-    private:
+class Entity : public ObserverPattern::Subject
+{
+private:
         std::pair<float, float> coords; // coordinates of entity in game logic
 
         // width and height of entity in game logic
         float entityWidth;
         float entityHeight;
 
-    public:
+public:
         virtual ~Entity();
 
         Entity();
 
-        explicit Entity(const std::pair<float, float> &coords);
+        explicit Entity(const std::pair<float, float>& coords);
 
-        const std::pair<float, float> &getCoords() const;
+        const std::pair<float, float>& getCoords() const;
 
-        void setCoords(const std::pair<float, float> &coords);
+        void setCoords(const std::pair<float, float>& coords);
 
         float getEntityWidth() const;
 
@@ -37,10 +38,7 @@ namespace Entities {
         void setEntityHeight(float entityHeight);
 
         bool collision(std::shared_ptr<Entity> otherEntity);
-    };
-}
+};
+} // namespace Entities
 
-
-
-
-#endif //SPACEINVADERS_ENTITY_H
+#endif // SPACEINVADERS_ENTITY_H
